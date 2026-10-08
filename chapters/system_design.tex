@@ -1,36 +1,43 @@
 \chapter{SYSTEM DESIGN}\label{ch:design}
+\begingroup\emergencystretch=3em
 
 \section{System Architecture}\label{sec:architecture}
+The system architecture connects live video capture, preprocessing, AI detection, post-processing,
+overlay visualization, and the user interface. Figure~\ref{fig:architecture} presents the
+architecture overview. The layered diagram describes how
+visual input is transformed into information displayed to the user.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.9\textwidth]{images/architecture.png}
+  \includegraphics[width=0.62\textwidth]{images/architecture.png}
   \caption{System Architecture}\label{fig:architecture}
 \end{figure}
 
-The system architecture for the project is structured into six distinct layers that facilitate a
-smooth data flow from capture to storage. It begins with the Input Layer, which is responsible for
-capturing real-time video footage. This raw data is then passed to the Preprocessing Layer, where
-images are resized, aligned, and noise is reduced to ensure clarity for analysis. The Processing
-Layer serves as the core intelligence hub, detecting objects and recognizing specific scenarios,
-followed by the Post-Processing Layer, which filters these detections and classifies potential
-threats. Finally, the User Interface Layer provides an interactive experience by displaying an AR
-overlay of the results, while the Storage Layer logs all detection data and metadata for future
-reference.
+In the prototype, CameraX supplies frames, the native YOLO pipeline prepares and analyzes them,
+and Flutter YOLOView renders the outputs. The design uses the term AR visualization for the
+overlays; the demonstrated outputs show image-space boxes, masks, and keypoints rather than a
+world-registered augmented-reality system. Logcat supports development diagnostics independently
+of the visual pipeline. Persistent mission storage is a proposed extension, not a demonstrated
+layer of the current implementation.
 
 \label{end:architecture}
 \section{System Workflow}\label{sec:workflow}
-\begin{figure}[h]
+Figure~\ref{fig:workflow} presents the operational workflow. The sequence
+starts with RGB camera input and proceeds through preprocessing, model execution,
+post-processing, user-interface visualization, and interpretation of the displayed output.
+
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.9\textwidth]{images/workflow.png}
+  \includegraphics[width=\textwidth]{images/workflow.png}
   \caption{System Workflow}\label{fig:workflow}
 \end{figure}
 
-The workflow follows a continuous loop designed for real-time monitoring and rapid response. Upon
-initiation, the system captures live RGB video and immediately subjects it to preprocessing steps
-like denoising and normalization. The AI Detection Engine then analyzes the feed to identify
-combatants, weapons, or vehicles. This leads to a critical decision point: if a threat is detected,
-the system applies bounding boxes, highlights the danger via AR visualization, alerts the user, and
-logs the data. If no threat is found, the system simply continues its monitoring cycle, returning to
-the capture step to ensure persistent surveillance.
+The implemented preprocessing operations are rotation, resizing or letterboxing, RGB conversion,
+and tensor preparation. After inference, filtering settings and coordinate mapping determine
+which outputs are drawn on the preview. The detection, segmentation, and pose modes provide
+different visual representations within this loop. The diagram's references to threat
+classification and user alerts express the wider design objective; the demonstrated outputs
+establish object-class overlays and do not demonstrate hostile-intent classification or a
+separate alerting service.
 \label{end:workflow}\label{end:design}
+\par\endgroup

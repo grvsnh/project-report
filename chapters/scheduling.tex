@@ -1,76 +1,68 @@
 \chapter{SCHEDULING}\label{ch:scheduling}
 
 \section{Gantt Chart}\label{sec:gantt}
-\begin{figure}[h]
+The development schedule spans July--November 2026. It organizes prototype planning,
+implementation, interface testing, custom model fine-tuning, model testing, final refinements,
+and report drafting. Figure~\ref{fig:gantt} presents that sequence in the report's editable Gantt
+format. Week positions are planning estimates rather than exact start and finish dates.
+
+\begin{figure}[htbp]
   \centering
   \begin{ganttchart}[
     hgrid,
     vgrid,
-    x unit=0.57\linewidth/16,
+    x unit=0.55\linewidth/16,
     title height=1
   ]{1}{20}
-
-    \gantttitle{January}{4}
-    \gantttitle{February}{4}
-    \gantttitle{March}{4}
-    \gantttitle{April}{4}
-    \gantttitle{May}{4} \\
-
+    \gantttitle{July}{4}
+    \gantttitle{August}{4}
+    \gantttitle{September}{4}
+    \gantttitle{October}{4}
+    \gantttitle{November}{4} \\
     \foreach \x in {1,...,5} {
       \gantttitlelist{1,...,4}{1}
     } \\
-
-    \ganttbar[bar/.style={fill=violet!66, draw=black}]{Literature Survey}{3}{5} \\
-    \ganttbar[bar/.style={fill=blue!66, draw=black}]{Base Paper Selection}{5}{6} \\
-    \ganttbar[bar/.style={fill=green!66, draw=black}]{Supp. Papers Selection}{7}{13} \\
-    \ganttbar[bar/.style={fill=yellow!66, draw=black}]{Report Drafting}{12}{15} \\
-    \ganttbar[bar/.style={fill=orange!66, draw=black}]{Report Finalization}{16}{16} \\
-    \ganttbar[bar/.style={fill=red!66, draw=black}]{Report Submission}{17}{18}
+    \ganttbar[bar/.style={fill=violet!66,draw=black}]{Prototype Planning}{3}{4} \\
+    \ganttbar[bar/.style={fill=blue!66,draw=black}]{Prototype Implementation}{5}{6} \\
+    \ganttbar[bar/.style={fill=green!66,draw=black}]{UI Implementation}{7}{8} \\
+    \ganttbar[bar/.style={fill=yellow!66,draw=black}]{UI Testing}{9}{9} \\
+    \ganttbar[bar/.style={fill=orange!66,draw=black}]{Model Fine-Tuning}{10}{14} \\
+    \ganttbar[bar/.style={fill=red!66,draw=black}]{Model Testing}{15}{15} \\
+    \ganttbar[bar/.style={fill=cyan!66,draw=black}]{Final Refinements}{16}{17} \\
+    \ganttbar[bar/.style={fill=gray!66,draw=black}]{Report Drafting}{18}{19}
   \end{ganttchart}
-
-  \caption{Gantt Chart for Major Project (Phase-1)}\label{fig:gantt}
+  \caption{Gantt Chart for Major Project}\label{fig:gantt}
 \end{figure}
 
-The project follows a structured timeline spanning from January to May. The initial phase begins in
-the second week of January with a three-week Literature Survey, which concludes in early February.
-This is immediately followed by the Base Paper Selection, spanning the first two weeks of February.
-Supporting Papers Selection constitutes the longest research block, starting in late February and
-continuing through the end of April. As research nears completion, Report Drafting commences in
-early April and runs for three weeks. The final stages are tightly scheduled in May, with Report
-Finalization occurring in the first week, followed by the final Report Submission during the second
-and third weeks of the month. This sequential approach ensures a rigorous foundation of research
-before the final documentation is prepared and delivered.
+The schedule is a development plan, not evidence that every later task has been completed. The
+academic year of the final submission is \AcademicYear, and the development months shown here
+retain the planned 2026 dates.
 
 \label{end:gantt}
 \section{Month-wise Progress}\label{sec:progress}
-The project timeline spans from January to May 2026, transitioning from initial literature research
-to final documentation. The month-wise progress details are as follows:
 
-\subsection{January}
-Conducted a comprehensive literature survey to identify relevant research papers and technologies in
-the domain of real-time combat vision systems. Identified research papers that could serve as the
-base paper and foundation for our project.
+\subsection{July}
+The plan begins with prototype planning in the latter part of July. This stage establishes the
+mobile processing pipeline and prepares the transition from the earlier literature and design
+work to an Android implementation.
 
-\subsection{February}
-Selected the base paper and conducted extensive reading and analysis to understand the current state
-of the art, identify gaps in existing solutions, and select a base paper that aligns with our
-project objectives.
+\subsection{August}
+Prototype implementation and UI implementation occupy August in the schedule. The September
+demonstration provides evidence of an integrated camera view, model outputs, task
+controls, and visual overlays following these development activities.
 
-\subsection{March}
-Selected 10 supplementary papers that provide additional insights, methodologies, and technologies
-relevant to our project. These papers contribute to the development of our combat vision system by
-providing a broader understanding of the field and potential approaches to implementation. Began
-intial work to draft the project report.
+\subsection{September}
+The schedule places UI testing near the start of September, followed by custom model fine-tuning.
+The available demonstration includes prototype screenshots but does not provide a completed
+custom-training run or validation metrics.
 
-\subsection{April}
-Drafted the project report, synthesizing information from the base paper and supplementary papers.
-Structured the report to clearly articulate the project details and specifications. Iteratively
-refined the report based on feedback and additional insights gained during the drafting process and
-drafted the final project report.
+\subsection{October}
+The plan continues fine-tuning into October, followed by model testing and final refinements.
+Completion of these tasks should be documented with the model configuration, training records,
+test data, and measurements produced during implementation.
 
-\subsection{May}
-\begingroup\emergencystretch=2em
-  Submitted the finalized project report, ensuring that all sections are complete, well-organized,
-  and adhere to the required guidelines.
-  \label{end:progress}\label{end:scheduling}
-\par\endgroup
+\subsection{November}
+Final refinements and report drafting extend into November. The final report consolidates the
+implementation details, evaluated results, limitations, and conclusions. Planned tasks are
+to be updated with actual progress before submission.
+\label{end:progress}\label{end:scheduling}

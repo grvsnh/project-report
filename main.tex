@@ -30,6 +30,8 @@
   \input{chapters/requirements_analysis}
   \input{chapters/system_design}
   \input{chapters/scheduling}
+  \input{chapters/implementation}
+  \input{chapters/result}
   \input{chapters/conclusion}
   \defbibheading{bibintoc}[REFERENCES]{%
     \chapter*{#1}\addcontentsline{toc}{chapter}{#1}\label{ch:references}}
@@ -38,4 +40,7 @@
     \printbibliography[heading=bibintoc,title={REFERENCES}]
     \label{end:references}
   \endgroup
+  % Appendices follow the references and use unnumbered headings.
+  \input{appendices/appendix_a}
+  \input{appendices/appendix_b}
 \end{document}

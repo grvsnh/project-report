@@ -1,9 +1,9 @@
-# VeerDrishti — Major Project Phase-I Report
+# VeerDrishti — Major Project Report
 
 This repository contains the editable LaTeX source for the **VeerDrishti:
-Combat Vision System** project report. It is a report template and Phase-I
-submission document; it is not the implementation of the computer-vision
-system.
+Combat Vision System** final-year project report for **2026–2027**. It documents
+the Android prototype and its available implementation evidence; the application source
+itself is not included in this repository.
 
 The generated report is [`main.pdf`](main.pdf). Edit the source files, rebuild
 the document, and inspect the new PDF. Do not edit the PDF directly.
@@ -31,13 +31,44 @@ report.sty                       Shared typography, headings and page commands
 front_layout.tex                 Named front-page placements
 sections/                        Cover, certificate, front matter and lists
 chapters/                        Report chapters
-images/                          Logos, letterhead and diagrams
+images/                          Logos, banner and diagrams
 references.bib                   Bibliography entries
 Guidelines-for-Project-work- ... VTU 2022-scheme guidelines
 main.pdf                         Generated report
 ```
 
 The document order is controlled by the `\input{...}` lines in `main.tex`.
+
+The body chapters are Introduction, Literature Survey, Requirements and Analysis,
+System Design, Scheduling, **Implementation (6)**, **Result (7)**, and
+**Conclusion (8)**. Edit `chapters/implementation.tex` and `chapters/result.tex`
+to extend the new chapters. Add matching rows to `sections/10_contents.tex` when
+adding sections; their numbers, titles, and page ranges resolve through labels.
+Figure and table list membership is also maintained in `sections/11_figures.tex`
+and `sections/12_tables.tex`.
+
+`\ReportPhase` and `\AcademicYear` in `report.sty` supply shared front-page
+metadata and the academic year. The PDF title is set there as well.
+
+## Prototype evidence
+
+The report documents the current prototype description: CameraX capture,
+YOLO26 Nano task variants, Flutter YOLOView, and Logcat diagnostics. Its
+architecture, workflow, visual outputs, runtime readings, and schedule are
+recorded directly in the report and retained within the **2026–2027** academic
+year.
+
+The Result chapter reports the displayed **11.9–21.3 FPS** readings as screenshot
+observations, not a sustained benchmark. Combat-specific accuracy, a test dataset,
+device specifications, and completed fine-tuning results are not established by
+the current prototype material. Replace or extend those parts with actual
+measurements when available. GAN augmentation, thermal fusion, and
+open-vocabulary detection remain proposed extensions rather than demonstrated
+prototype features.
+
+`images/vtu-logo.png` is the supplied VTU artwork. The BTI banner is in `images/`,
+with aspect ratio preserved by the shared layout. Replace the source artwork if
+the institution changes its branding.
 
 ### Editing front pages
 
@@ -148,7 +179,7 @@ sudo pacman -S --needed libxcrypt-compat
 ## VTU guideline report
 
 The supplied **Guidelines for Final Year Project Work — 2022 scheme** were
-checked against the source. The current Phase-I report implements the relevant
+checked against the source. The current report implements the relevant
 report-preparation requirements as follows:
 
 | Guideline | Current report |
@@ -159,13 +190,14 @@ report-preparation requirements as follows:
 | Front matter | Cover, certificate, declaration, acknowledgements, abstract, index, figure list and table list |
 | Numbering | Roman preliminary pages and Arabic-numbered chapters |
 | Figures and tables | Numbered by chapter and included in their lists |
-| Abstract | 96 words, within the 100-word limit |
+| Abstract | Uses the official supplied abstract wording |
 | References | Numbered in citation order through `biblatex` IEEE style |
-| Report body | Introduction, problem statement, literature review, scope, methodology, requirements, design, schedule and conclusion |
+| Report body | Introduction, literature survey, requirements, design, schedule, implementation, result, discussion and conclusion |
 
-The report is intentionally marked **Phase-I**. Implementation, measurements,
-results, discussion, appendices, and any hardware/software deliverables should
-be added only when they actually exist. Before printing or final submission,
+The implementation and result chapters document the available prototype
+evidence.
+Additional measurements, appendices, and hardware/software deliverables should
+be added as they become available. Before printing or final submission,
 confirm the exact certificate wording, title-page arrangement, officials,
 academic year, signatures, copies, binding, appendices, and external-viva
 requirements with the project guide and department. Successful compilation
@@ -175,7 +207,7 @@ does not replace that approval.
 
 - Build `main.pdf` successfully and inspect every page visually.
 - Check names, USNs, title, academic year, guide, officials and signatures.
-- Keep the abstract at or below 100 words.
+- Preserve the official supplied abstract wording.
 - Confirm that claims from papers are cited and are not presented as project measurements.
 - Add implementation and evaluation evidence before calling the work complete.
 - Obtain guide and department approval before printing.

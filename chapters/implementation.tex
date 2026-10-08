@@ -1,0 +1,109 @@
+\chapter{IMPLEMENTATION}\label{ch:implementation}
+\begingroup\emergencystretch=3em
+
+\section{Prototype Overview}\label{sec:prototype}
+VeerDrishti is implemented as an Android application that combines a live camera feed with
+on-device computer-vision inference. The implementation uses Android CameraX for video capture,
+Ultralytics YOLO26 Nano and its variants for inference, Flutter for the interface, and Android
+Logcat for development diagnostics. The prototype brings these components together to display
+detections directly over the camera view.
+
+The implementation focuses on the capture--inference--visualization loop. The prototype demonstrates
+ordinary object detection, segmentation overlays, and human pose visualization. The longer-term
+combat-vision objective guides the application, but thermal fusion, open-vocabulary recognition,
+combat-specific fine-tuning, and persistent mission recording are separate extensions whose
+completion is not established by the current prototype evidence.
+
+\label{end:prototype}
+\section{Module Implementation}\label{sec:modules}
+
+\subsection{Input Module}
+Android CameraX provides the live camera input. The application exposes the camera view through
+the Flutter interface so that users can observe the scene and its associated overlays together.
+The portrait and landscape screenshots demonstrate operation in both orientations. Camera access
+requires Android camera permission; denial or interruption must be handled before attempting to
+run the inference pipeline.
+
+\subsection{Preprocessing Module}
+Preprocessing is handled by the native YOLO inference pipeline. This stage includes frame rotation,
+resizing or letterboxing, RGB conversion, and input tensor
+preparation. Rotation keeps the analyzed image consistent with device orientation. Resizing and
+letterboxing adapt the camera frame to the model input while preserving the information needed
+to align output coordinates with the preview. The exact input resolution and normalization
+settings depend on the deployed model configuration and should be recorded for reproducibility.
+
+\subsection{Inference Module}
+YOLO26 Nano and its task variants form the inference component. Computation takes
+place on the device, supporting a prototype that does not require a remote server for each frame.
+The interface exposes Det, Seg, and Pose modes, corresponding to detection, segmentation, and pose
+outputs. The precise model export format, class configuration, and hardware execution delegate
+must be taken from the application configuration when documenting a reproducible deployment.
+
+\subsection{Post-Processing Module}
+The native inference output is passed to the Flutter YOLOView integration for display. The
+application renders bounding boxes, class labels, and confidence information on the live camera
+feed. Segmentation mode adds colored object-region overlays, while pose mode displays body
+keypoints and their connecting lines. Detection coordinates must be mapped to the displayed
+preview after rotation, letterboxing, scaling, or zoom so that the overlays remain aligned with
+the visible objects.
+
+\subsection{User Interface Module}
+Flutter supplies the application interface, camera display, mode controls, and visual output.
+The demonstration screenshots show confidence and intersection-over-union (IoU) threshold controls,
+zoom information, and runtime indicators. Keeping these controls in the camera view allows users
+to inspect the effect of a configuration change without switching to a separate results screen.
+Object labels describe model predictions; an object or person label alone does not establish
+hostile intent or distinguish a combatant from a civilian.
+
+\subsection{Development Logging Module}
+Android Logcat records runtime logs and debugging information during development and testing.
+These logs support diagnosis of camera initialization, inference integration, and application
+behavior. This development logging mechanism is distinct from a persistent detection-event or
+mission-video archive. The current implementation does not include a demonstrated database,
+encrypted recording service, or post-mission retrieval interface.
+
+\label{end:modules}
+\section{Frame Processing Pipeline}\label{sec:pipeline}
+The module descriptions define the following processing sequence for the prototype:
+\begin{enumerate}
+  \item Initialize the selected camera and model task, then present the live preview after camera
+    permission is available.
+  \item Obtain an analyzable frame from CameraX and account for its orientation.
+  \item Resize or letterbox the frame, convert it to RGB, and prepare the input tensor in the
+    native inference pipeline.
+  \item Run the selected YOLO26 Nano task variant on the device and obtain its output.
+  \item Apply the configured filtering settings and map the resulting coordinates to the preview.
+  \item Render labels, boxes, masks, or pose keypoints through YOLOView, display runtime
+    information, and continue with subsequent frames.
+    \label{end:pipeline}
+\end{enumerate}
+
+\section{Interface and Detection Controls}\label{sec:controls}
+The demonstration screenshots show a confidence threshold of 0.25 and an IoU threshold of 0.70.
+The confidence setting controls the minimum score accepted for display. The IoU setting controls
+overlap filtering where the selected model pipeline uses it. Changing either threshold can alter
+the visible output, so evaluation runs should record both values along with the selected task and
+model. The implementation record should state whether all task variants use the same suppression mechanism.
+
+The interface also displays frames per second and processing times, including preprocessing,
+inference, and post-processing components. These values help inspect responsiveness during a
+demonstration. They are displayed runtime observations, not a substitute for repeated timing
+measurements on a documented device. Chapter~\ref{ch:result} records the displayed values and
+distinguishes them from a sustained-performance benchmark.
+
+\label{end:controls}
+\section{Integration and Testing}\label{sec:integration}
+Integration testing connects camera capture, model execution, and overlay rendering as one
+application workflow. The demonstrated exhibits involve scissors, a mouse, furniture, laptops,
+bottles, and groups of people. These scenes exercise multiple visible objects and the three task
+modes. Portrait and landscape exhibits also provide evidence for checking preview
+orientation and output alignment.
+
+For reproducible testing, record the Android device and version, application build, model file,
+task mode, input resolution, thresholds, and execution backend. Separate functional checks from
+accuracy and performance evaluation: a correctly rendered box verifies an interface path, while
+precision, recall, mAP, and sustained frame rate require defined data and measurement procedures.
+The available prototype material supports an initial functional demonstration; the Result chapter describes
+the available observations and the evaluation details still needed.
+\label{end:integration}\label{end:implementation}
+\par\endgroup

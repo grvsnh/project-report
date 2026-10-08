@@ -1,0 +1,231 @@
+\chapter*{APPENDIX A}
+\label{appendix:a}
+
+\begin{center}
+  \textbf{SOURCE CODE LISTING (1/3)}
+\end{center}
+\begingroup
+\fontsize{6.5pt}{6.8pt}\selectfont
+\begin{verbatim}
+// Ultralytics YOLO Android wrapper
+// AGPL-3.0 License - https://ultralytics.com/license
+package com.ultralytics.yolo
+
+import android.content.Context
+import android.graphics.*
+import android.net.Uri
+import android.provider.MediaStore
+import android.util.Log
+import androidx.camera.core.ImageProxy
+import kotlinx.coroutines.*
+import java.io.IOException
+import java.net.URL
+class YOLO(
+    private val context: Context,
+    private val modelPath: String,
+    val task: YOLOTask,
+    private val labels: List<String> = emptyList(),
+    private val useGpu: Boolean = true,
+    private var numItemsThreshold: Int = 30,
+    private val classifierOptions: Map<String, Any>? = null
+) {
+    private val tag = "YOLO"
+    private var closed = false
+    private val predictorDelegate = lazy(LazyThreadSafetyMode.NONE) {
+        Predictor.create(context, modelPath, task, labels, useGpu,
+            numItemsThreshold, classifierOptions) as BasePredictor
+    }
+    private val predictor: BasePredictor
+        get() { check(!closed); return predictorDelegate.value }
+    @Synchronized
+    fun predict(bitmap: Bitmap, rotateForCamera: Boolean = false): YOLOResult {
+        predictor.includeRawMaskData = true
+        val result = predictor.predict(bitmap, bitmap.width, bitmap.height,
+            rotateForCamera, isLandscape = false)
+        return result.copy(originalImage = bitmap,
+            annotatedImage = drawAnnotations(bitmap, result, rotateForCamera),
+            accelerator = predictor.accelerator)
+    }
+    @Synchronized
+    fun predict(imageProxy: ImageProxy): YOLOResult? {
+        val bitmap = ImageUtils.toBitmap(imageProxy) ?: return null
+        val rotation = imageProxy.imageInfo.rotationDegrees
+        predictor.cameraRotationDegrees = rotation
+        val result = predictor.predict(bitmap, imageProxy.width, imageProxy.height, true, false)
+        return result.copy(originalImage = bitmap,
+            annotatedImage = drawAnnotations(bitmap, result, true, rotation),
+            accelerator = predictor.accelerator)
+    }
+    @Synchronized
+    fun predict(imageUri: Uri): YOLOResult? = try {
+        val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+        predict(bitmap)
+    } catch (error: IOException) {
+        Log.e(tag, "Failed to load Uri: ${error.message}"); null
+    }
+    suspend fun predict(imageUrl: String): YOLOResult? = withContext(Dispatchers.IO) {
+        try {
+            val bitmap = BitmapFactory.decodeStream(URL(imageUrl).openStream())
+            predict(bitmap)
+        } catch (error: IOException) {
+            Log.e(tag, "Failed to load URL: ${error.message}"); null
+        }
+    }
+\end{verbatim}
+\endgroup
+
+\clearpage
+\begin{center}
+  \textbf{SOURCE CODE LISTING (2/3)}
+\end{center}
+\begingroup
+\fontsize{6.5pt}{6.8pt}\selectfont
+\begin{verbatim}
+    private fun calculateSmartLabelRect(
+        box: RectF, labelWidth: Float, labelHeight: Float,
+        viewWidth: Float, viewHeight: Float
+    ): RectF {
+        var left = box.left; var top = box.top - labelHeight
+        var right = left + labelWidth; var bottom = box.top
+        if (top < 0) { top = box.top; bottom = top + labelHeight }
+        if (left < 0) { left = 0f; right = labelWidth }
+        if (right > viewWidth) { right = viewWidth; left = right - labelWidth }
+        if (bottom > viewHeight) { bottom = viewHeight; top = bottom - labelHeight }
+        return RectF(left, top, right, bottom)
+    }
+
+    private fun drawAnnotations(bitmap: Bitmap, result: YOLOResult,
+        rotateForCamera: Boolean = true, rotationDegrees: Int? = null): Bitmap {
+        val degrees = rotationDegrees ?: 90
+        val rotated = degrees % 180 != 0
+        val output = if (rotateForCamera) Bitmap.createBitmap(
+            if (rotated) bitmap.height else bitmap.width,
+            if (rotated) bitmap.width else bitmap.height, Bitmap.Config.ARGB_8888
+        ) else bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(output)
+        if (rotateForCamera) { canvas.save()
+            canvas.translate(output.width / 2f, output.height / 2f)
+            canvas.rotate(degrees.toFloat())
+            canvas.drawBitmap(bitmap, -bitmap.width / 2f, -bitmap.height / 2f, null)
+            canvas.restore() }
+        val paint = Paint().apply { style = Paint.Style.STROKE }
+        val sx = output.width / result.origShape.width.toFloat()
+        val sy = output.height / result.origShape.height.toFloat()
+        fun scale(box: RectF) = RectF(box.left * sx, box.top * sy,
+            box.right * sx, box.bottom * sy)
+
+        when (task) {
+            YOLOTask.DETECT, YOLOTask.SEGMENT, YOLOTask.POSE -> {
+                result.boxes.forEach { box ->
+                    paint.color = ultralyticsColors[box.index % ultralyticsColors.size]
+                    val bounds = scale(box.xywh)
+                    canvas.drawRoundRect(bounds, 12f, 12f, paint)
+                    val text = "${box.cls} ${(box.conf * 100).toInt()}%"
+                    val label = calculateSmartLabelRect(bounds,
+                        paint.measureText(text) + 16f, 48f,
+                        output.width.toFloat(), output.height.toFloat())
+                    paint.style = Paint.Style.FILL
+                    canvas.drawRoundRect(label, 12f, 12f, paint)
+                    paint.color = Color.WHITE; canvas.drawText(text,
+                        label.left + 8f, label.bottom - 8f, paint)
+                    paint.style = Paint.Style.STROKE
+                }
+                // Full implementation also draws masks, keypoints, and skeletons.
+            }
+            YOLOTask.SEMANTIC, YOLOTask.DEPTH -> {
+                result.semanticMask?.let { drawMask(canvas, it, output) }
+                result.depthMap?.let { drawDepth(canvas, it, output) }
+            }
+            YOLOTask.CLASSIFY -> drawTopFive(canvas, result, paint)
+            YOLOTask.OBB -> drawOrientedBoxes(canvas, result, paint, sx, sy)
+        }
+        return output
+    }
+
+    @Synchronized fun setConfidenceThreshold(value: Double) =
+        predictor.setConfidenceThreshold(value)
+    @Synchronized fun setIouThreshold(value: Double) = predictor.setIouThreshold(value)
+    @Synchronized fun setNumItemsThreshold(max: Int) {
+        numItemsThreshold = max; predictor.setNumItemsThreshold(max)
+    }
+    fun getConfidenceThreshold(): Float = predictor.getConfidenceThreshold().toFloat()
+    fun getIouThreshold(): Float = predictor.getIouThreshold().toFloat()
+    @Synchronized fun close() {
+        closed = true
+        if (predictorDelegate.isInitialized()) predictorDelegate.value.close()
+    }
+}
+\end{verbatim}
+\endgroup
+
+\clearpage
+\begin{center}
+  \textbf{SOURCE CODE LISTING (3/3)}
+\end{center}
+\begingroup
+\fontsize{6.5pt}{6.8pt}\selectfont
+\begin{verbatim}
+    private fun drawMask(canvas: Canvas, mask: Bitmap, output: Bitmap) {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            alpha = 96
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)
+        }
+        val scaled = Bitmap.createScaledBitmap(mask, output.width,
+            output.height, true)
+        canvas.drawBitmap(scaled, 0f, 0f, paint)
+    }
+
+    private fun drawDepth(canvas: Canvas, depth: Bitmap, output: Bitmap) {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val scaled = Bitmap.createScaledBitmap(depth, output.width,
+            output.height, true)
+        paint.colorFilter = ColorMatrixColorFilter(ColorMatrix(floatArrayOf(
+            1f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f,
+            0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 1f, 0f)))
+        canvas.drawBitmap(scaled, 0f, 0f, paint)
+    }
+
+    private fun drawTopFive(canvas: Canvas, result: YOLOResult, paint: Paint) {
+        result.topClassifications.take(5).forEachIndexed { index, item ->
+            val y = 48f + index * 42f
+            paint.style = Paint.Style.FILL
+            paint.color = Color.WHITE
+            paint.textSize = 28f
+            canvas.drawText("${item.label}: ${item.confidence}", 24f, y, paint)
+        }
+    }
+
+    private fun drawOrientedBoxes(canvas: Canvas, result: YOLOResult,
+        paint: Paint, sx: Float, sy: Float) {
+        result.boxes.forEach { box ->
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 4f
+            paint.color = ultralyticsColors[box.index % ultralyticsColors.size]
+            val points = box.corners.map { PointF(it.x * sx, it.y * sy) }
+            if (points.size >= 4) {
+                val path = Path().apply {
+                    moveTo(points[0].x, points[0].y)
+                    points.drop(1).forEach { lineTo(it.x, it.y) }
+                    close()
+                }
+                canvas.drawPath(path, paint)
+            }
+        }
+    }
+
+    data class DetectionSettings(
+        val confidence: Float = 0.25f,
+        val iou: Float = 0.45f,
+        val maximumItems: Int = 30,
+        val useGpu: Boolean = true
+    )
+
+    fun applySettings(settings: DetectionSettings) {
+        setConfidenceThreshold(settings.confidence.toDouble())
+        setIouThreshold(settings.iou.toDouble())
+        setNumItemsThreshold(settings.maximumItems)
+    }
+\end{verbatim}
+\endgroup
+
+\label{appendix:a-end}

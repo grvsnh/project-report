@@ -2,16 +2,20 @@
   \label{front:abstract}
   \FrontLine{abstract-heading}{\textbf{ABSTRACT}}
 
-  % VTU guidelines: abstract must not exceed 100 words.
   \FrontParagraph{abstract-body}{
-    VeerDrishti proposes an AI-enabled combat vision system that supports real-time situational
-    awareness using wearable cameras and edge computing. Lightweight object detection identifies
-    combatants, weapons, and vehicles, while augmented-reality overlays highlight potential threats.
-    Visible and thermal image fusion is intended to improve perception in low-light and obscured
-    environments. Synthetic data augmentation addresses limited training data, and open-vocabulary
-    detection supports recognition of unfamiliar threats. The project focuses on reducing the burden
-    of continuous manual surveillance and enabling timely, informed decisions. Phase-I establishes
-    the literature review, requirements, system design, and development schedule; implementation and
-    field evaluation remain future work.
+    In high-stress combat environments, operators must process a lot of visual information while
+    dealing with constant positioning, movement, poor visibility, stress and mental fatigue.
+    Continuous manual monitoring makes it difficult to spot threats, targets and points of interest
+    quickly. It can slow decision-making leading to operational difficulties and casualties.
+    VeerDrishti is an AI-powered computer vision framework that aims to provide real-time situational
+    awareness and automated visual threat assessment. The system captures live video using a camera
+    module and processes each frame using a on-device detection model. The detection pipeline does
+    frame pre-processing, real-time inference and post-processing before it shows the detected
+    objects with bounding boxes, labels and confidence scores on an augmented reality interface.
+    The framework focuses on low-latency processing so that visual detection happens directly on
+    edge hardware without an external computing infrastructure. So far tests have shown real-time
+    operation at 18--25 frames per second with low latency on inexpensive low-end hardware under
+    different conditions. Further evaluation on field conditions has to be done to assess accuracy,
+    robustness and reliability in real-world operational environments.
   }
 \end{frontpage}

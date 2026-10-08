@@ -1,23 +1,20 @@
 \chapter{CONCLUSION}\label{ch:conclusion}
-The project advances tactical situational awareness by combining state-of-the-art AI with wearable
-combat technology. It employs the lightweight YOLOv8 architecture and multimodal image fusion to
-enable real-time, autonomous threat detection in high-stress environments. By integrating visible
-and thermal imaging, the system remains effective in challenging conditions such as darkness, smoke,
-and low visibility. This reduces cognitive load on personnel by converting complex visual data into
-actionable insights, enabling faster and more accurate decision-making. The system’s robustness is
-enhanced through GAN-based synthetic data augmentation, which addresses limited military datasets,
-and CLIP-based open-vocabulary detection, allowing adaptation to unseen threats via natural language
-guidance. Additionally, its edge-optimized design enables high-speed, low-latency inference on
-portable, smartphone-based hardware. This ensures reliable performance even in signal-denied
-environments while maintaining data security and operational efficiency, ultimately supporting rapid
-and informed responses in critical combat scenarios. \vspace{6pt}
+\begingroup\emergencystretch=3em
+VeerDrishti has progressed from a proposed combat-vision framework to an Android prototype that
+connects camera capture, on-device inference, and visual output. The demonstration identifies
+CameraX, YOLO26 Nano task variants, Flutter YOLOView, and Logcat as the
+main implementation components. The presented screenshots demonstrate object detection,
+segmentation, and multi-person pose overlays in portrait and landscape views, with configurable
+thresholds and runtime indicators. This establishes the application's capture-to-display
+foundation and provides concrete evidence for the Implementation and Result chapters.
 
-Looking forward, the potential for VeerDrishti extends into a scalable framework for future defense
-innovations. Future iterations could integrate more complex action recognition models to predict
-hostile intent or incorporate advanced feature-fusion strategies to further enhance the detection of
-micro-scale targets. In conclusion, VeerDrishti offers a versatile and reliable solution for modern
-national security. By harmonizing cutting-edge computer vision research with the practical,
-high-stakes requirements of the frontline, the project provides a definitive technological
-advantage, ensuring enhanced safety and operational efficiency for ground units in the evolving
-landscape of modern warfare.
+The observed runtime readings and visual exhibits do not establish battlefield accuracy,
+sustained performance, or a reduction in casualties. Those outcomes remain project objectives
+that require combat-relevant data and controlled evaluation. The next development steps are to
+document the deployed configuration, evaluate accuracy and latency on repeatable test cases,
+refine the interface, and validate the selected model for the intended object classes. Thermal
+fusion, open-vocabulary recognition, and persistent event recording remain possible extensions
+rather than demonstrated features. By grounding further development in measured evidence,
+VeerDrishti can advance toward a more reliable, portable visual decision-support system.
 \label{end:conclusion}
+\par\endgroup

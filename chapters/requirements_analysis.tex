@@ -13,11 +13,14 @@ The functional requirements define the core capabilities of the project, includi
   \item \textbf{Visual Highlighting:} Detected threats should be visually highlighted on the display
     interface, providing clear and immediate feedback to the user.
   \item \textbf{Open Vocabulary Recognition:} The system should be able to identify novel or
-    previously unseen threats using natural language supervision and language-vision encoders.
+    previously unseen threats using natural language supervision and language-vision encoders as
+    a future extension; the current task variants use their configured class sets.
   \item \textbf{User Interface:} The system must provide an intuitive user interface that allows
     easy interpretation of the visual information to make informed decisions without distraction.
   \item \textbf{Data Logging:} The system must provide secure local storage of detection events and
-    video metadata for post-mission analysis and system auditing.
+     video metadata for post-mission analysis and system auditing in a later implementation stage.
+     The present prototype records development diagnostics through Logcat rather than persistent
+     mission storage.
   \label{end:functional}
 \end{enumerate}
 \section{Non-Functional Requirements}\label{sec:nonfunctional}
@@ -41,25 +44,39 @@ project, including:
 \begin{enumerate}[label=\roman*.]
   \item \textbf{Development Workstation:} High-performance laptop equipped with a dedicated GPU for
     code development, dataset preprocessing, and initial model debugging.
-  \item \textbf{Edge Deployment Device:} High-end smartphone with an integrated Neural Processing
-    Unit (NPU) to host the prototype application and execute real-time local inference.
-  \item \textbf{Cloud Training Infrastructure:} Scalable cloud-based GPU instances utilized for
-    training complex deep learning architectures and performing large-scale hyperparameter
-    optimization.
+  \item \textbf{Edge Deployment Device:} Android smartphone with a camera and sufficient compute
+    and memory to execute the deployed model and render a live preview. The exact device and
+    acceleration backend must be recorded for reproducible performance measurements.
+  \item \textbf{Training Resources:} GPU-equipped local or cloud resources for planned model
+     fine-tuning. The final deployment record should identify the training resource and completed
+     configuration used for reproducible experiments.
   \label{end:hardware}
 \end{enumerate}
 \section{Software Requirements}\label{sec:software}
 \begingroup\emergencystretch=3em
   \begin{enumerate}[label=\roman*.]
-    \item \textbf{Operating System:} Linux distribution like Ubuntu 26.04 LTS with stable CUDA/ROS
-      support.
-    \item \textbf{Programming Languages:} Python 3.9+ for model development, Rust for
-      high-performance edge execution and Kotlin for mobile application development.
-    \item \textbf{IDE/Tools:} VS Code, Jupyter Notebooks for experimentation, and Git for version
-      control.
-    \item \textbf{Core Framework:} PyTorch 2.0+ or TensorFlow 2.x (primarily PyTorch for YOLOv8/v10
-      implementation).
-    \item \textbf{Cloud Platform:} Google Cloud Vertex AI or AWS EC2 for large-scale model training.
+    \item \textbf{Target Platform:} Android with camera permission, CameraX capture, and a native
+      inference integration. The Android version and minimum SDK must match the application build.
+    \item \textbf{Application Framework:} Flutter and Dart for the user interface and YOLOView
+      integration, together with the Android native components used by the camera and model runtime.
+    \item \textbf{Model Pipeline:} Ultralytics YOLO26 Nano and task variants for on-device detection,
+      segmentation, and pose visualization.
+    \item \textbf{Development and Diagnostics:} A Flutter/Android development environment, Android
+      SDK tools, and Logcat for runtime diagnostics. Record actual package versions when preparing
+      the final reproducible setup.
+    \item \textbf{Model Preparation:} A compatible Ultralytics training/export environment for
+      custom fine-tuning. The dataset, export format, and framework versions must be recorded with
+      any completed training run.
   \end{enumerate}
 \endgroup
-\label{end:software}\label{end:requirements}
+\label{end:software}
+
+\section{Acceptance Criteria}\label{sec:acceptance}
+The requirements are considered traceable when each implemented capability can be checked through
+an observable system action and a recorded test condition. Functional acceptance checks include
+camera initialization, frame processing, task selection, overlay rendering, threshold control, and
+graceful handling of camera or model errors. Non-functional checks should record the device,
+application build, model variant, input configuration, processing time, displayed frame rate, and
+operating conditions. This separation distinguishes interface verification from accuracy,
+robustness, power, and sustained-performance evaluation.
+\label{end:acceptance}\label{end:requirements}

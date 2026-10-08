@@ -8,8 +8,18 @@
 \RequirePackage[hidelinks]{hyperref}
 \usetikzlibrary{calc}
 \setmainfont{Times New Roman}
+% Keep prose and table cells justified without automatic or line-end hyphenation.
+% The extra stretch lets TeX adjust inter-word space instead of splitting words.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\doublehyphendemerits=100000
+\finalhyphendemerits=100000
+\emergencystretch=4em
+% Submission details shared by the cover, certificate, declaration and headers.
+\newcommand{\ReportPhase}{}
+\newcommand{\AcademicYear}{2026--2027}
 \hypersetup{
-  pdftitle={VeerDrishti: Combat Vision System — Major Project Phase-I Report},
+  pdftitle={VeerDrishti: Combat Vision System — Major Project Report},
   pdfauthor={Gaurav Chauhan and Gaurav Singh}
 }
 \addbibresource{references.bib}
@@ -27,7 +37,7 @@
 \fancypagestyle{report}{%
   \fancyhf{}
   \fancyhead[L]{\fontsize{12pt}{0pt}\textbf{VeerDrishti: Combat Vision System}}
-  \fancyhead[R]{\fontsize{12pt}{0pt}\textbf{2025--2026}}
+  \fancyhead[R]{\fontsize{12pt}{0pt}\textbf{\AcademicYear}}
   \fancyfoot[L]{\fontsize{12pt}{0pt}\textbf{Dept. of CSE, BTI, Bengaluru}}
   \fancyfoot[R]{\fontsize{12pt}{0pt}\textbf{\thepage}}
 }
@@ -99,9 +109,10 @@
 }
 
 \newcommand{\FrontImage}[5]{%
-  \node[anchor=north west,inner sep=0pt,outer sep=0pt]
-    at ($(current page.north west)+(#1bp,-#2bp)$)
-    {\includegraphics[width=#3bp,height=#4bp]{#5}};
+  % Fit and center artwork in its allotted box without stretching the new logo.
+  \node[anchor=center,inner sep=0pt,outer sep=0pt]
+    at ($(current page.north west)+(#1bp+#3bp/2,-#2bp-#4bp/2)$)
+    {\includegraphics[width=#3bp,height=#4bp,keepaspectratio]{#5}};
 }
 \newcommand{\FrontRect}[5]{%
   \draw[line width=#5bp] ($(current page.north west)+(#1bp,-#2bp)$)
@@ -110,6 +121,43 @@
 \newcommand{\FrontRuleRaw}[4]{%
   \fill ($(current page.north west)+(#1bp,-#2bp)$)
     rectangle ($(current page.north west)+(#3bp,-#4bp)$);
+}
+
+% The supplied VTU mission/vision pages use their own measured layout. They
+% retain the double frame and current report artwork, but do not inherit the
+% report's 1.5-spaced paragraph blocks.
+\newenvironment{missionpage}[1][\MissionArtwork]{%
+  \null\phantomsection\thispagestyle{empty}%
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[line width=3bp] ($(current page.north west)+(80.5bp,-49.5bp)$)
+      rectangle ($(current page.north west)+(531.5bp,-793bp)$);
+    \draw[line width=.72bp] ($(current page.north west)+(83.1bp,-52.1bp)$)
+      rectangle ($(current page.north west)+(528.9bp,-790.4bp)$);
+    #1
+    \FrontLineRaw{303.07}{771.54}{0}{12}{\thepage}%
+}{%
+  \end{tikzpicture}\clearpage
+}
+
+\newcommand{\MissionHeading}[2]{%
+  \node[anchor=base,inner sep=0pt,outer sep=0pt]
+    at ($(current page.north west)+(308.714bp,-#1bp)$)
+    {\fontsize{12bp}{12bp}\selectfont\textbf{#2}};
+}
+% Justify complete paragraphs within common margins; their final line retains
+% natural word spacing.  Local line spacing preserves the four-page source layout.
+\newcommand{\MissionParagraph}[3]{%
+  \node[anchor=base west,inner sep=0pt,outer sep=0pt]
+    at ($(current page.north west)+(95.064bp,-#1bp)$)
+    {\begin{minipage}[t]{427.3bp}%
+      \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}%
+      \setstretch{1}%
+      \fontsize{12bp}{#2bp}\selectfont
+      \leftskip=0pt\rightskip=0pt\parfillskip=0pt plus1fil
+      \spaceskip=.25em plus.125em minus.05em\xspaceskip=0pt
+      \emergencystretch=1.5em\tolerance=5000
+      #3\par
+    \end{minipage}};
 }
 
 % Front-page source files use named placements.  The measured coordinates live
@@ -124,7 +172,7 @@
 
 % Artwork placements live here so the page sources do not need image coordinates.
 \newcommand{\CoverArtwork}{%
-  \FrontImage{280.15}{121.75}{49.40}{62.12}{images/vtu-logo.jpeg}%
+  \FrontImage{280.15}{121.75}{49.40}{62.12}{images/vtu-logo.png}%
   \FrontImage{101.46}{578.02}{411.96}{47.18}{images/bti-banner.png}%
   \FrontRect{91.78}{569.69}{523.10}{628.04}{0.75}%
 }
@@ -133,7 +181,7 @@
   \FrontRect{91.07}{55.07}{522.72}{155.87}{0.75}%
 }
 \newcommand{\DeclarationArtwork}{%
-  \FrontImage{90}{69.20}{436.54}{104.48}{images/bti-letterhead.png}%
+  \FrontImage{90}{69.20}{436.54}{104.48}{images/bti-banner.png}%
   \FrontRect{91.10}{68.82}{525.32}{170.22}{0.75}%
 }
 \newcommand{\InstituteArtwork}{%
@@ -151,6 +199,14 @@
 \newcommand{\SpecificOutcomesArtwork}{%
   \FrontImage{102.02}{68.48}{414.52}{82.40}{images/bti-banner.png}%
   \FrontRect{92.28}{54.21}{526.29}{155.56}{0.75}%
+}
+\newcommand{\MissionArtwork}{%
+  \FrontImage{102.02}{64.75}{414.73}{82.44}{images/bti-banner.png}%
+  \FrontRect{90.00}{50.00}{526.00}{156.52}{0.75}%
+}
+\newcommand{\MissionOutcomesArtwork}{%
+  \FrontImage{106.99}{50.00}{409.08}{71.50}{images/bti-banner.png}%
+  \FrontRect{90.00}{50.00}{526.00}{120.80}{0.75}%
 }
 
 % Custom contents rows resolve their numbers, titles and page ranges from labels.

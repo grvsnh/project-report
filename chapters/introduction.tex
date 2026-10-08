@@ -11,20 +11,19 @@ real-time visual data to provide actionable insights and enhance situational awa
 
 VeerDrishti is an AI-enabled combat vision system designed to bridge this gap by providing soldiers
 with a persistent, intelligent observer through a camera-integrated solution. By leveraging
-state-of-the-art computer vision models and edge computing, the system autonomously identifies enemy
-combatants, vehicles, and weapons. The primary objective is to offload the mental burden of constant
+computer vision models and edge computing, the system aims to highlight people, vehicles, and
+potentially relevant objects. The primary objective is to offload the mental burden of constant
 monitoring from the soldier, allowing them to focus on strategic execution. Developed as a
 lightweight solution suitable for deployment on wearable hardware, the system aims to transform how
 visual data is utilized on the front lines of national security. \vspace{6pt}
 
-The project incorporates sophisticated methodologies to ensure reliability under diverse and
-challenging battlefield conditions. It utilizes multimodal image fusion—combining visible and
-thermal spectrums—to maintain high detection accuracy in low-light or obscured environments.
-Furthermore, by implementing edge-optimized architectures and advanced feature fusion techniques,
-the system achieves high-speed inference without compromising precision. This integration of
-versatile object detection and robust information processing ensures that the system remains a
-reliable asset, offering a significant technological advantage in modern combat and defense
-operations.
+The current work develops the project into an Android prototype with live video capture, on-device
+model execution, and visual overlays. The demonstrated prototype shows detection of everyday
+objects, segmentation, and human pose visualization using CameraX, YOLO26 Nano task variants, and Flutter.
+The literature review explores approaches such as synthetic data augmentation, visible--thermal
+fusion, and vision-language detection. These remain potential extensions; the demonstrated
+prototype establishes an RGB-camera processing pipeline rather than a completed multimodal or
+combat-validated system.
 
 \label{end:overview}
 \section{Problem Statement}\label{sec:problem}
@@ -44,8 +43,9 @@ high-stress operations.
 
 \subsection{Scope}
 The scope of the project is to develop an autonomous, real-time vision system designed to detect
-enemy personnel, weapons, and vehicles in tactical environments. The technical implementation will
-focus on developing a lightweight system, optimized for localized inference on mobile edge devices.
+people, weapons, and vehicles in tactical environments. The current work focuses on the Android
+camera-to-overlay pipeline and ordinary object, segmentation, and pose demonstrations. Identifying
+hostile intent and validating combat-specific detection require additional data and evaluation.
 
 \subsection{Purpose}
 The purpose of the project is to provide an autonomous, intelligent observer that delivers real-time
@@ -78,22 +78,22 @@ Specific objectives for the project include:
   \label{end:objectives}
 \end{enumerate}
 \section{Methodology}\label{sec:methodology}
-The project adopts a hybrid deep-learning approach that integrates generative data augmentation with
-edge-optimized multimodal fusion. Initially, the system utilizes a Generative Adversarial Network
-(GAN) to synthesize high-quality military training data, addressing scarcity in combat-specific
-datasets. For real-time execution, the project implements a lightweight detection architecture, such
-as EfficientDet or YOLOv10, optimized for low-latency performance on edge devices like smartphones
-or Raspberry Pi. To ensure reliability in varying field conditions, the methodology incorporates
-multimodal image fusion, specifically merging RGB texture with Infrared (thermal) edge data using a
-fine-grained region attention mechanism. This ensures robust target classification even during night
-operations or in cluttered environments. Furthermore, the system leverages a vision-language model
-(like Florence v2) for zero-shot detection, allowing the identification of "unseen" or novel threats
-through natural language supervision. Post-detection, the pipeline filters data and applies an
-Augmented Reality (AR) overlay to highlight threats instantly, while securing all mission metadata
-in a local storage layer for subsequent auditing.
+The current methodology follows an on-device capture--inference--visualization pipeline. Android
+CameraX captures live frames, and the native YOLO pipeline handles rotation, resizing or
+letterboxing, RGB conversion, and tensor preparation. YOLO26 Nano task variants perform model
+execution on the device. Flutter YOLOView presents bounding boxes, labels, confidence values,
+segmentation regions, or pose keypoints over the preview, while Logcat supports development
+diagnostics. Users can adjust detection thresholds and inspect displayed runtime indicators.
+
+The demonstration screenshots provide initial functional evidence. Further evaluation requires a
+documented device and model configuration, annotated test data, and repeatable timing runs.
+Combat-specific fine-tuning is part of the planned development. GAN augmentation,
+multimodal fusion, and open-vocabulary recognition are research-informed options rather than
+features demonstrated by the current prototype.
 
 \label{end:methodology}
 \section{Sustainable Development Goal Relevance}\label{sec:sdg}
+\setlength{\parskip}{6pt}
 The project aligns with United Nations Sustainable Development Goal 16: Peace, Justice, and Strong
 Institutions.
 
@@ -102,15 +102,15 @@ Institutions.
 VeerDrishti will enhance battlefield situational awareness by detecting and tracking potential
 threats in real time. This capability will enable defense personnel to respond faster and make more
 informed decisions during combat situations. By improving awareness and reaction time, the system
-will help reduce operational risks and potentially decrease casualties. \\
+ will help reduce operational risks and potentially decrease casualties.\par\medskip
 
 \textbf{Target 16.3: Promote the rule of law at the national and international levels and ensure
   equal access to justice for all}
 
 VeerDrishti will record visual data during operations, enabling improved mission analysis and
-operational review. It will support evidence-based evaluation of decisions made during missions.
+operational evaluation. It will support evidence-based evaluation of decisions made during missions.
 Such recorded data could also assist investigations related to violations of international
-humanitarian law, including potential war crimes. \\
+humanitarian law, including potential war crimes.\par\medskip
 
 \textbf{Target 16.A: Strengthen relevant national institutions, including through international
   cooperation, for building capacity at all levels, in particular in developing countries, to
@@ -144,17 +144,22 @@ expenses. The prototype approach minimizes initial investment, making the system
 research, testing, and potential scalable improvements in future versions.
 
 \label{end:feasibility}
+\clearpage
 \section{Work Distribution}\label{sec:work}
-\begin{table}[h]
-  \centering
-  \caption{Work Distribution Among Team Members}\label{tab:work}
-  \begin{tabular}{lll}
+The project tasks were distributed between the team members according to their
+responsibilities in model development, interface implementation, testing, presentation,
+and documentation.
+\begin{samepage}
+\begin{center}
+  \captionof{table}{Work Distribution Among Team Members}\label{tab:work}
+  \begin{tabular}{>{\raggedright\arraybackslash}p{4.1cm}>{\raggedright\arraybackslash}p{8.9cm}}
     \toprule
-    \textbf{Name} & \textbf{Tasks} \\
+    \textbf{Team Member} & \textbf{Assigned Responsibilities} \\
     \midrule
-    Gaurav Chauhan & Literature Survey and Report Writing \\
-    Gaurav Singh & Literature Survey and Slide Preparation \\
+    Gaurav Chauhan & Model training, user-interface implementation, and documentation. \\
+    Gaurav Singh & Model training, testing, presentation, and documentation. \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{center}
+\end{samepage}
 \label{end:work}\label{end:introduction}
