@@ -10,15 +10,20 @@
   \FrontLine{contents-table-of-contents}{\textbf{TABLE OF CONTENTS}}
   \FrontLine{contents-figures}{\textbf{LIST OF FIGURES}}
   \FrontLine{contents-tables}{\textbf{LIST OF TABLES}}
-  \FrontLine{contents-acknowledgement-page}{\hfill\textbf{\pageref{front:acknowledgement}}\hfill}
-  \FrontLine{contents-abstract-page}{\hfill\textbf{\pageref{front:abstract}}\hfill}
-  \FrontLine{contents-institute-page}{\hfill\textbf{\pageref{front:institute}}\hfill}
-  \FrontLine{contents-program-page}{\hfill\textbf{\pageref{front:program}}\hfill}
-  \FrontLine{contents-outcomes-page}{\hfill\textbf{\PageRange{front:outcomes}{front:outcomes-end}}\hfill}
-  \FrontLine{contents-specific-outcomes-page}{\hfill\textbf{\pageref{front:specific_outcomes}}\hfill}
-  \FrontLine{contents-table-of-contents-page}{\hfill\textbf{\PageRange{front:contents}{front:contents-end}}\hfill}
-  \FrontLine{contents-figures-page}{\hfill\textbf{\pageref{front:figures}}\hfill}
-  \FrontLine{contents-tables-page}{\hfill\textbf{\pageref{front:tables}}\hfill}
+  \FrontLine{contents-snaps}{\textbf{LIST OF SNAPS}}
+  % These Roman page numbers correspond to the supplied front-sheet PDF.
+  \FrontLine{contents-acknowledgement-page}{\hfill\textbf{i}\hfill}
+  \FrontLine{contents-abstract-page}{\hfill\textbf{ii}\hfill}
+  \FrontLine{contents-institute-page}{\hfill\textbf{iii}\hfill}
+  \FrontLine{contents-program-page}{\hfill\textbf{iv}\hfill}
+  \FrontLine{contents-outcomes-page}{\hfill\textbf{v}\hfill}
+  \FrontLine{contents-specific-outcomes-page}{\hfill\textbf{vi}\hfill}
+  % The generated contents and list pages follow the six numbered front-sheet
+  % pages.
+  \FrontLine{contents-table-of-contents-page}{\hfill\textbf{vii--viii}\hfill}
+  \FrontLine{contents-figures-page}{\hfill\textbf{ix}\hfill}
+  \FrontLine{contents-tables-page}{\hfill\textbf{x}\hfill}
+  \FrontLine{contents-snaps-page}{\hfill\textbf{xi}\hfill}
   \FrontRule{contents-divider}
   \FrontLine{contents-body-heading}{\textbf{TABLE OF CONTENTS}}
   \FrontLine{contents-chapter-label}{\textbf{Chapter}}
@@ -36,13 +41,13 @@
   \ContentsRow{work}{sec:work}{end:work}
   \ContentsChapter{literature}{ch:literature}{end:literature}
   \ContentsRow{literature-review}{sec:literature-review}{end:literature-review}
+  \ContentsRow{comparison}{sec:comparison}{end:comparison}
+  \ContentsChapter{requirements}{ch:requirements}{end:requirements}
 \end{frontpage}
 
 \begin{frontpage}
   \label{front:contents-end}
   \FrontPageTwoContents
-  \ContentsRow{comparison}{sec:comparison}{end:comparison}
-  \ContentsChapter{requirements}{ch:requirements}{end:requirements}
   \ContentsRow{functional}{sec:functional}{end:functional}
   \ContentsRow{nonfunctional}{sec:nonfunctional}{end:nonfunctional}
   \ContentsRow{hardware}{sec:hardware}{end:hardware}
@@ -68,6 +73,8 @@
   \ContentsChapter{conclusion}{ch:conclusion}{end:conclusion}
   \FrontLine{contents-references}{\textbf{REFERENCES}}
   \FrontLine{contents-references-page}{\hfill\textbf{\PageRange{ch:references}{end:references}}\hfill}
-  \FrontLine{contents-appendices}{\textbf{APPENDICES}}
-  \FrontLine{contents-appendices-page}{\hfill\textbf{\PageRange{appendix:a}{appendix:b}}\hfill}
+  \FrontLine{contents-appendix-a}{\textbf{APPENDIX A}}
+  \FrontLine{contents-appendix-a-page}{\hfill\textbf{\PageRange{appendix:a}{appendix:a-end}}\hfill}
+  \FrontLine{contents-appendix-b}{\textbf{APPENDIX B}}
+  \FrontLine{contents-appendix-b-page}{\hfill\textbf{\PageRange{appendix:b}{appendix:b-end}}\hfill}
 \end{frontpage}

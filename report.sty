@@ -8,6 +8,10 @@
 \RequirePackage[hidelinks]{hyperref}
 \usetikzlibrary{calc}
 \setmainfont{Times New Roman}
+\setmonofont{Times New Roman}
+% Keep small metric subscripts in the document font instead of introducing a
+% separate mathematics font for simple labels such as mAP50.
+\newcommand{\ReportSubscript}[1]{\raisebox{-0.35ex}{\fontsize{8pt}{8pt}\selectfont #1}}
 % Keep prose and table cells justified without automatic or line-end hyphenation.
 % The extra stretch lets TeX adjust inter-word space instead of splitting words.
 \hyphenpenalty=10000
@@ -26,7 +30,9 @@
 \captionsetup[table]{skip=12pt}
 \setlist[enumerate]{label=\roman*.}
 \onehalfspacing
+% VTU body formatting uses flush-left paragraphs rather than tab indentation.
 \setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
 
 % Original headheight + headsep = 24pt; reserve 17pt for its double-rule header.
 \setlength{\headheight}{17pt}
@@ -51,9 +57,17 @@
   {\fontsize{16pt}{0pt}\selectfont\bfseries\chaptername\ \thechapter}{0pt}%
   {\centering\fontsize{18pt}{0pt}\selectfont\bfseries}
 \titleformat{\section}{\fontsize{16pt}{0pt}\selectfont\bfseries}{\thesection}{1em}{}
-\titleformat{\subsection}{\fontsize{14pt}{14pt}\selectfont\bfseries}{\thesubsection}{1em}{}
+% Subsection titles remain in the hierarchy, but their numeric prefix is
+% omitted from the rendered report and from any automatic table of contents.
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+\titleformat{\subsection}{\fontsize{14pt}{14pt}\selectfont\bfseries}{}{0pt}{}
 \titlespacing{\chapter}{0pt}{-12pt}{12pt}
+\titlespacing{\section}{0pt}{14pt}{8pt}
+\titlespacing{\subsection}{0pt}{14pt}{6pt}
+\makeatletter
 \patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{report}}{}{}
+\makeatother
 
 % Put hyperlink anchors inside the heading line, after any automatic page break.
 \makeatletter
@@ -168,6 +182,29 @@
 \newcommand{\FrontPageTwoContents}{%
   \renewcommand{\ContentsTitleX}{164.78}%
   \renewcommand{\ContentsNumberX}{119.90}%
+  \SetContentsRow{functional}{78.24}%
+  \SetContentsRow{nonfunctional}{102.38}%
+  \SetContentsRow{hardware}{126.14}%
+  \SetContentsRow{software}{150.22}%
+  \SetContentsRow{acceptance}{174.30}%
+  \SetContentsRow{design}{198.06}%
+  \SetContentsRow{architecture}{221.97}%
+  \SetContentsRow{workflow}{245.85}%
+  \SetContentsRow{scheduling}{270.21}%
+  \SetContentsRow{gantt}{294.69}%
+  \SetContentsRow{progress}{319.05}%
+  \SetContentsRow{implementation}{343.41}%
+  \SetContentsRow{prototype}{367.41}%
+  \SetContentsRow{modules}{391.41}%
+  \SetContentsRow{pipeline}{415.41}%
+  \SetContentsRow{controls}{439.41}%
+  \SetContentsRow{integration}{463.41}%
+  \SetContentsRow{result}{487.41}%
+  \SetContentsRow{demonstration}{511.41}%
+  \SetContentsRow{visual}{535.41}%
+  \SetContentsRow{runtime}{559.41}%
+  \SetContentsRow{discussion}{583.41}%
+  \SetContentsRow{conclusion}{607.41}%
 }
 
 % Artwork placements live here so the page sources do not need image coordinates.
@@ -222,6 +259,9 @@
 \newcommand{\ContentsRow}[3]{%
   \FrontLineRaw{\ContentsTitleX}{\ContentsY{#1}}{0}{12}{\ref{#2}\ \nameref{#2}}%
   \FrontLineRaw{456.34}{\ContentsY{#1}}{30}{12}{\hfill\PageRange{#2}{#3}\hfill}%
+}
+\newcommand{\SetContentsRow}[2]{%
+  \expandafter\renewcommand\csname contents@y@#1\endcsname{#2}%
 }
 \newcommand{\ContentsChapter}[3]{%
   \FrontLineRaw{\ContentsNumberX}{\ContentsY{#1}}{0}{12}{\textbf{\ref{#2}}}%

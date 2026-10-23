@@ -97,14 +97,14 @@ features demonstrated by the current prototype.
 The project aligns with United Nations Sustainable Development Goal 16: Peace, Justice, and Strong
 Institutions.
 
-\textbf{Target 16.1: Significantly reduce all forms of violence and related death rates everywhere}
+\noindent\textbf{Target 16.1: Significantly reduce all forms of violence and related death rates everywhere}
 
 VeerDrishti will enhance battlefield situational awareness by detecting and tracking potential
 threats in real time. This capability will enable defense personnel to respond faster and make more
 informed decisions during combat situations. By improving awareness and reaction time, the system
  will help reduce operational risks and potentially decrease casualties.\par\medskip
 
-\textbf{Target 16.3: Promote the rule of law at the national and international levels and ensure
+\noindent\textbf{Target 16.3: Promote the rule of law at the national and international levels and ensure
   equal access to justice for all}
 
 VeerDrishti will record visual data during operations, enabling improved mission analysis and
@@ -112,7 +112,7 @@ operational evaluation. It will support evidence-based evaluation of decisions m
 Such recorded data could also assist investigations related to violations of international
 humanitarian law, including potential war crimes.\par\medskip
 
-\textbf{Target 16.A: Strengthen relevant national institutions, including through international
+\noindent\textbf{Target 16.A: Strengthen relevant national institutions, including through international
   cooperation, for building capacity at all levels, in particular in developing countries, to
   prevent violence and combat terrorism and crime}
 
@@ -121,6 +121,7 @@ technological capacity of national security institutions. The project will suppo
 operations and the protection of national interests.
 
 \label{end:sdg}
+\setlength{\parskip}{0pt}
 \section{Feasibility Study}\label{sec:feasibility}
 The feasibility of the proposed combat vision system is assessed across technical, operational, and
 economic dimensions.
@@ -149,17 +150,18 @@ research, testing, and potential scalable improvements in future versions.
 The project tasks were distributed between the team members according to their
 responsibilities in model development, interface implementation, testing, presentation,
 and documentation.
-\begin{samepage}
-\begin{center}
-  \captionof{table}{Work Distribution Among Team Members}\label{tab:work}
-  \begin{tabular}{>{\raggedright\arraybackslash}p{4.1cm}>{\raggedright\arraybackslash}p{8.9cm}}
-    \toprule
+\begin{table}[htbp]
+  \centering
+  \caption{Work Distribution Among Team Members}\label{tab:work}
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{|>{\raggedright\arraybackslash}p{4.1cm}|>{\raggedright\arraybackslash}p{8.9cm}|}
+    \hline
     \textbf{Team Member} & \textbf{Assigned Responsibilities} \\
-    \midrule
-    Gaurav Chauhan & Model training, user-interface implementation, and documentation. \\
-    Gaurav Singh & Model training, testing, presentation, and documentation. \\
-    \bottomrule
+    \hline
+    Gaurav Chauhan & Dataset preparation, annotation, model training and evaluation; system design, module integration, camera-feed rotation handling; requirements analysis, literature review, feasibility study, report preparation, presentation, proofreading, and project demonstration. \\
+    \hline
+    Gaurav Singh & User-interface implementation, camera integration, real-time display controls, functional testing and performance observation; requirements analysis, literature review, feasibility study, report preparation, presentation, proofreading, and project demonstration. \\
+    \hline
   \end{tabular}
-\end{center}
-\end{samepage}
+\end{table}
 \label{end:work}\label{end:introduction}

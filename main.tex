@@ -1,25 +1,20 @@
 \documentclass[12pt,a4paper]{report}
 \usepackage{report}
+\usepackage{pdfpages}
 
 \begin{document}
-  % Cover and signature pages have no printed page numbers.
-  \pagestyle{empty}
-  \hypersetup{pageanchor=false}
-  \input{sections/01_titlepage}
-  \input{sections/02_certificate}
-  \input{sections/03_declaration}
-  % Preliminary pages use Roman numbering.
+  % Use the supplied front sheet so its artwork, wording, capitalization,
+  % spacing, certificate Viva block, and outcome-page margins are preserved.
+  \includepdf[pages=1-9,pagecommand={\thispagestyle{empty}}]{front-sheet.pdf}
+
+  % The supplied front sheet contains the preliminary pages through Roman vi.
   \pagenumbering{roman}
+  \setcounter{page}{7}
   \pagestyle{plain}
-  \input{sections/04_acknowledgement}
-  \input{sections/05_abstract}
-  \input{sections/06_institute}
-  \input{sections/07_program}
-  \input{sections/08_outcomes}
-  \input{sections/09_specific_outcomes}
   \input{sections/10_contents}
   \input{sections/11_figures}
   \input{sections/12_tables}
+  \input{sections/13_snaps}
 
   % Body chapters and references use Arabic numbering.
   \pagenumbering{arabic}
@@ -33,14 +28,17 @@
   \input{chapters/implementation}
   \input{chapters/result}
   \input{chapters/conclusion}
+  \clearpage
   \defbibheading{bibintoc}[REFERENCES]{%
-    \chapter*{#1}\addcontentsline{toc}{chapter}{#1}\label{ch:references}}
+    \section*{#1}\addcontentsline{toc}{chapter}{#1}\label{ch:references}}
   \begingroup
     \emergencystretch=2em
     \printbibliography[heading=bibintoc,title={REFERENCES}]
     \label{end:references}
   \endgroup
-  % Appendices follow the references and use unnumbered headings.
+  % Appendices follow the references and use alphabetic appendix numbering.
+  \appendix
+  \renewcommand{\chaptername}{Appendix}
   \input{appendices/appendix_a}
   \input{appendices/appendix_b}
 \end{document}

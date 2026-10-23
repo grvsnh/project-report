@@ -14,12 +14,11 @@ The project uses **XeLaTeX**, **latexmk**, **Biber**, and the **Times New Roman*
 font. From the directory containing `main.tex`:
 
 ```sh
-latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex \
-  && latexmk -c -bibtex main.tex
+latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
 ```
 
 The successful build leaves `main.pdf` in the repository root. The cleanup
-command removes intermediate files but keeps the PDF. To build in VS Code,
+command is `latexmk -c main.tex` and keeps the PDF. To build in VS Code,
 install the LaTeX Workshop extension, open the repository folder, and run the
 configured **latexmk (XeLaTeX)** recipe.
 
@@ -29,7 +28,8 @@ configured **latexmk (XeLaTeX)** recipe.
 main.tex                         Report entry point and page order
 report.sty                       Shared typography, headings and page commands
 front_layout.tex                 Named front-page placements
-sections/                        Cover, certificate, front matter and lists
+front-sheet.pdf                  Supplied nine-page front matter
+sections/                        Editable front matter reference, lists and contents
 chapters/                        Report chapters
 images/                          Logos, banner and diagrams
 references.bib                   Bibliography entries
@@ -70,10 +70,17 @@ prototype features.
 with aspect ratio preserved by the shared layout. Replace the source artwork if
 the institution changes its branding.
 
-### Editing front pages
+### Front pages
 
-The front pages retain their measured college layout, but section files no
-longer contain distracting coordinate groups. Use named placements:
+The first nine pages are imported from the supplied `front-sheet.pdf` so the
+cover, certificate Viva area, declaration, acknowledgement, sentence case,
+bold spans, artwork, margins, and vision/mission/outcome layouts match the
+provided reference. The corresponding editable files in `sections/` remain in
+the repository for reference but are not emitted by the final build.
+
+The generated index, contents, figure list, table list, and snap list continue
+to use the named placements in `front_layout.tex`. For future source-based
+front-page work, use named placements:
 
 ```latex
 \FrontLine{cover-university}{\textbf{VISVESVARAYA TECHNOLOGICAL UNIVERSITY}}
@@ -82,8 +89,7 @@ longer contain distracting coordinate groups. Use named placements:
 
 The placement names and their measurements are kept in `front_layout.tex`.
 Change wording in `sections/`; change a fixed position only when necessary in
-`front_layout.tex`. This keeps the visual output consistent with the current
-PDF while making the report content easier to read and edit.
+`front_layout.tex`.
 
 For body content, edit the matching file in `chapters/`. Add figures to
 `images/`, cite sources with their keys from `references.bib`, and rebuild
@@ -166,7 +172,7 @@ From the repository root:
 latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
 pdfinfo main.pdf                 # optional: confirms pages and A4 size
 pdffonts main.pdf                # optional: checks embedded fonts
-latexmk -c -bibtex main.tex
+latexmk -c main.tex
 ```
 
 If Biber on Arch reports `libcrypt.so.1` missing, install the compatibility
