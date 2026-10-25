@@ -24,6 +24,19 @@ it does not confirm class accuracy, stable tracking, or suitability for operatio
 proper evaluation should therefore pair the screenshots with the device configuration, model file,
 input resolution, dataset split, repeated timing samples, and clearly defined success criteria.
 
+The demonstrations also provide a useful separation between interface evidence and model evidence.
+The presence of a live preview and an overlay confirms that the camera, inference call, coordinate
+mapping, and rendering path were connected for that frame. The class name and confidence value show
+what the deployed model displayed, but they do not prove that the class was correct. Similarly, a
+smooth-looking preview suggests that the application remained responsive during the capture, but it
+does not establish a sustained frame rate over a long run.
+
+This distinction is important for interpreting the chapter responsibly. The result is a record of
+what the prototype visibly produced under the available demonstration conditions. It is not a claim
+that the system has already been trained on a combat dataset, validated against field imagery, or
+qualified for operational deployment. The evidence is still useful because it identifies the working
+capture-to-display path and makes the next evaluation steps concrete.
+
 \label{end:demonstration}
 \section{Visual Output}\label{sec:visual}
 
@@ -83,8 +96,28 @@ performance under battlefield conditions.
   \includegraphics[width=\textwidth]{images/result-pose.png}
   \captionsetup{name=Snap}
   \caption[Multi-Person Pose Output]{Multi-person pose output from the demonstrated prototype.}
-  \label{snap:result-pose}\label{end:visual}
+\label{snap:result-pose}\label{end:visual}
 \end{figure}
+
+\subsection{Cross-Orientation and Task Comparison}
+The visual exhibits cover both portrait and landscape presentation. Portrait scenes make the vertical
+camera workflow and the stacking of interface controls easy to inspect, while landscape scenes show
+how the same output path behaves when the available horizontal space changes. The comparison is
+particularly relevant for a wearable or helmet-mounted concept, where the camera orientation may
+change as the operator moves or changes the viewing posture.
+
+Detection mode provides the clearest first check because the output is represented by boxes, labels,
+and confidence values. Segmentation mode adds a denser visual layer and therefore tests whether masks
+remain aligned without obscuring the scene. Pose mode adds keypoints and connections, making it useful
+for checking multi-person rendering and partial occlusion. Across the exhibits, the prototype shows
+that these modes can be presented through the same interface, but the screenshots do not rank one mode
+as more accurate or more suitable for field use.
+
+The displayed confidence values also illustrate why visual interpretation should accompany numerical
+readings. A high score may make an overlay appear convincing, while a lower score can still be useful
+when the object is visible and the threshold permits it to be displayed. Conversely, a visually
+plausible box can still be a false detection. A controlled assessment would compare these displays with
+ground-truth annotations rather than treating the confidence number as an accuracy percentage.
 
 % Finish the visual evidence before discussing the numerical readings.
 \section{Displayed Runtime Measurements}\label{sec:runtime}
@@ -121,6 +154,20 @@ corresponds to approximately 26.4 processing cycles per second, whereas the scre
 the relationship between these indicators. The timing windows are not defined, so the
 processing-time field is not claimed to measure end-to-end camera-to-display latency.
 
+The six readings are best interpreted as configuration-specific observations. The portrait
+segmentation reading of 11.9 FPS and 62.9 ms is not directly comparable to the landscape group-pose
+reading of 21.3 FPS and 37.9 ms because the task, scene, orientation, and processing path differ.
+Likewise, the preprocessing, inference, and post-processing components shown in the exhibits identify
+where time was displayed for those frames, but they do not provide a distribution across repeated
+samples. A useful follow-up experiment would collect a fixed number of readings for each task and
+orientation, then report mean, minimum, maximum, and spread using the same device and model.
+
+The current table therefore supports a practical engineering observation: inference is a visible
+contributor to processing time, while the relationship between displayed FPS and component timings
+depends on capture, scheduling, rendering, and averaging behavior. It does not support a claim of
+stable real-time performance under all conditions. That limitation is retained so that future measured
+results can be added without contradicting the present evidence.
+
 \label{end:runtime}
 \section{Discussion and Limitations}\label{sec:discussion}
 The demonstration establishes a functional foundation of live camera input, on-device inference,
@@ -132,6 +179,15 @@ Quantitative accuracy evaluation requires an annotated dataset and defined test 
 and mAP are not reported because the available material lacks those measurements. Sustained FPS,
 latency distributions, power consumption, and thermal behavior likewise require repeated runs on a
 documented device. Literature-review results belong to those studies, not to VeerDrishti.
+
+The results can consequently be organized into three evidence levels. Directly observed evidence
+includes camera preview operation, object overlays, segmentation regions, pose keypoints, threshold
+controls, and displayed runtime fields. Implementation-supported behavior includes the documented
+capture, rotation, preprocessing, inference, and rendering sequence. Claims that still require new
+evidence include combat-specific recognition, accuracy against annotated data, sustained performance,
+power and thermal behavior, tracking consistency, and operational reliability. This classification
+keeps the discussion useful while preventing a prototype screenshot from being presented as a complete
+field evaluation.
 
 Further evaluation should cover small or distant objects, occlusion, camera motion, illumination changes,
 false or missed detections, and overlay alignment. Combat-specific fine-tuning, thermal fusion,

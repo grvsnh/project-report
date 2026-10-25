@@ -32,12 +32,51 @@ letterboxing adapt the camera frame to the model input while preserving the info
 to align output coordinates with the preview. The exact input resolution and normalization
 settings depend on the deployed model configuration and should be recorded for reproducibility.
 
+\subsection{Orientation and Coordinate Handling}
+Camera frames and displayed previews do not always share the same width, height, or orientation.
+The implementation therefore treats orientation as part of the input-processing contract rather than
+as a cosmetic display option. A portrait frame may arrive from the camera with rotation metadata,
+while the preview is rendered after the interface has already applied its own layout transformation.
+If these transformations are ignored, a detection can be correct in model coordinates but appear
+shifted, mirrored, or rotated in the user interface.
+
+The processing sequence first reads the camera rotation information, then prepares the frame for the
+selected task. After inference, the output coordinates are mapped back to the preview dimensions.
+The same principle applies to segmentation masks and pose keypoints: the transformation must be
+consistent for the image, the bounding geometry, and the visual overlay. This is why the portrait and
+landscape demonstrations are useful integration evidence even though they are not accuracy tests.
+
+The current implementation material also indicates that camera-feed rotation is applied consistently
+when frames are passed through the inference path. A production evaluation should still record the
+rotation metadata, preview dimensions, crop or letterbox policy, and zoom state for every run. These
+details make it possible to distinguish an inference problem from a coordinate-mapping problem when
+an overlay appears misaligned.
+
 \subsection{Inference Module}
 YOLO26 Nano and its task variants form the inference component. Computation takes
 place on the device, supporting a prototype that does not require a remote server for each frame.
 The interface exposes Det, Seg, and Pose modes, corresponding to detection, segmentation, and pose
 outputs. The precise model export format, class configuration, and hardware execution delegate
 must be taken from the application configuration when documenting a reproducible deployment.
+
+\subsection{Task Selection and Threshold Handling}
+The task selector changes the type of output produced by the same camera-to-display workflow.
+Detection emphasizes rectangular object localization and class labels, segmentation adds pixel-region
+information, and pose adds keypoints and skeletal connections for visible people. Keeping these modes
+inside one interface makes the prototype suitable for comparing the presentation cost and visual
+interpretation of different outputs without changing the surrounding camera workflow.
+
+The confidence threshold provides a first filtering boundary for predictions shown to the user, while
+the IoU threshold affects overlap handling where the selected pipeline applies suppression. A lower
+confidence threshold can expose more candidate objects but may also increase clutter. A stricter
+threshold can make the view easier to interpret while hiding weak or partially occluded predictions.
+For this reason, a threshold value should be treated as part of the experiment configuration, not as
+a hidden interface preference.
+
+The demonstrated configuration uses a confidence threshold of 0.25 and an IoU threshold of 0.70.
+Those values explain the visible output in the supplied exhibits, but they do not define an optimal
+configuration for combat scenes. Future tests should vary one setting at a time, preserve the same
+scene and model, and record the resulting changes in visible detections, masks, or keypoints.
 
 \subsection{Post-Processing Module}
 The native inference output is passed to the Flutter YOLOView integration for display. The
@@ -99,11 +138,61 @@ bottles, and groups of people. These scenes exercise multiple visible objects an
 modes. Portrait and landscape exhibits also provide evidence for checking preview
 orientation and output alignment.
 
+The integration boundary can be understood as five connected checkpoints. First, the camera must
+initialize and deliver a frame after permission is granted. Second, the frame must reach the selected
+model task with the expected orientation. Third, the inference result must return without blocking the
+interface. Fourth, the result must be mapped into the preview without visible displacement. Finally,
+the interface must expose the selected mode, threshold state, and runtime fields clearly enough for a
+user to interpret the output. A failure at any checkpoint can make the final screenshot appear wrong
+even when the other modules are functioning correctly.
+
+The visible prototype supports functional checks at this boundary. It demonstrates live preview
+operation, task switching, overlays, portrait and landscape presentation, and displayed timing
+values. It does not by itself establish permission recovery after interruption, long-duration thermal
+stability, memory behavior, or reliable operation across different camera sensors. Those cases belong
+to a later validation plan and should be tested on documented hardware rather than inferred from one
+successful demonstration.
+
 For reproducible testing, record the Android device and version, application build, model file,
 task mode, input resolution, thresholds, and execution backend. Separate functional checks from
 accuracy and performance evaluation: a correctly rendered box verifies an interface path, while
 precision, recall, mAP, and sustained frame rate require defined data and measurement procedures.
 The available prototype material supports an initial functional demonstration; the Result chapter describes
 the available observations and the evaluation details still needed.
+
+The recommended implementation checklist is therefore: verify camera permission and initialization;
+verify rotation handling in both orientations; verify the selected task and threshold values; verify
+that boxes, masks, and keypoints remain aligned after resizing; verify that runtime readings are
+visible without covering the scene; and record the device, build, model, and execution backend.
+Completing this checklist would make a later accuracy or performance study easier to reproduce without
+changing the application architecture described in this chapter.
+
+\subsection{Implementation Risks and Mitigations}
+Several practical risks are relevant to an on-device vision application. Camera permission can be
+denied, revoked, or interrupted when the activity changes state. The application should respond by
+showing a clear recovery path rather than attempting inference on an unavailable frame. Similarly,
+model initialization can fail because of a missing file, an incompatible export, or an unavailable
+execution delegate. Logging the initialization stage and the selected task makes these failures easier
+to separate from ordinary frame-processing errors.
+
+Orientation and preview scaling create a second class of risk. A camera frame can be valid while its
+overlay is visually incorrect if the rotation metadata, crop, zoom, or letterbox dimensions are not
+propagated consistently. The demonstrated portrait and landscape views provide a practical regression
+pair: the same visible object can be checked after the device orientation changes, and any systematic
+displacement can be investigated in the coordinate transformation rather than in the model itself.
+
+Runtime stability is another boundary. A single successful frame does not establish that the preview
+will remain responsive during a long session. Repeated runs should therefore record frame processing
+behavior, memory pressure, device temperature, and the selected acceleration path. If performance
+degrades over time, the investigation should distinguish model execution, image conversion, overlay
+rendering, and logging overhead. This decomposition follows the modular structure already used by the
+prototype and avoids attributing every delay to the detector.
+
+Finally, the interface must remain understandable when several objects, masks, or keypoints are
+visible at once. Labels should not obscure the most important part of the scene, controls should be
+readable in both orientations, and confidence values should be interpreted as model outputs rather
+than as verified accuracy. These considerations do not change the current prototype result, but they
+define the engineering checks needed before the same pipeline could be evaluated in more demanding
+indoor, outdoor, or tactical conditions.
 \label{end:integration}\label{end:implementation}
 \par\endgroup
