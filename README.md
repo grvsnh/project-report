@@ -8,6 +8,42 @@ application source itself is not included here.
 The final generated report is [`main.pdf`](main.pdf). Edit the source files,
 rebuild the PDF, inspect the result, and never edit the PDF directly.
 
+## Final verified status
+
+The current report package is the final checked report version before physical
+printing and approval:
+
+- final PDF: `main.pdf`;
+- total length: **55 pages**;
+- page size: **A4** (`595.28 × 841.89 pt`);
+- Chapter 6 — Implementation: body pages **22–26**;
+- Chapter 7 — Result: body pages **27–32**;
+- References begin on body page **34**;
+- ICSTIM submission appears on page **36**;
+- DRDO synopsis appears on page **37**;
+- Appendix A occupies pages **38–40**;
+- Appendix B occupies page **41**;
+- the final Table of Contents remains within two pages;
+- the final abstract is below the VTU 100-word limit and uses the available
+  evidence-aligned 11.9–21.3 FPS wording;
+- the working tree was clean after verification.
+
+The last documentation and compliance commit is:
+
+```text
+a4efd20 docs: finalize VTU compliance documentation
+```
+
+The LaTeX build completed successfully with no fatal errors, undefined
+references, or overfull boxes. `git diff --check` passed and generated auxiliary
+files were removed after the final build. Underfull-box warnings may remain in
+some long paragraphs or tables because line-end hyphenation is intentionally
+disabled; these do not indicate clipped or overflowing text.
+
+The report is ready for the remaining **physical** steps: guide approval,
+corrections if requested, signatures, seals, viva fields, printing, binding, and
+separate software-source handover.
+
 ## Build the report
 
 The report uses XeLaTeX, `latexmk`, Biber, `biblatex-ieee`, and Times New Roman.
