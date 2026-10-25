@@ -3,19 +3,14 @@
   \FrontLine{abstract-heading}{\textbf{ABSTRACT}}
 
   \FrontParagraph{abstract-body}{
-    In high-stress combat environments, operators must process a lot of visual information while
-    dealing with constant positioning, movement, poor visibility, stress and mental fatigue.
-    Continuous manual monitoring makes it difficult to spot threats, targets and points of interest
-    quickly. It can slow decision-making leading to operational difficulties and casualties.
-    VeerDrishti is an AI-powered computer vision framework that aims to provide real-time situational
-    awareness and automated visual threat assessment. The system captures live video using a camera
-    module and processes each frame using a on-device detection model. The detection pipeline does
-    frame pre-processing, real-time inference and post-processing before it shows the detected
-    objects with bounding boxes, labels and confidence scores on an augmented reality interface.
-    The framework focuses on low-latency processing so that visual detection happens directly on
-    edge hardware without an external computing infrastructure. So far tests have shown real-time
-    operation at 18--25 frames per second with low latency on inexpensive low-end hardware under
-    different conditions. Further evaluation on field conditions has to be done to assess accuracy,
-    robustness and reliability in real-world operational environments.
+    VeerDrishti is an Android-based computer-vision prototype for real-time visual situational
+    awareness. It captures camera frames and applies on-device YOLO26 Nano task variants through
+    Flutter YOLOView, with CameraX handling capture and rotation. The prototype displays detection
+    boxes, segmentation masks, pose keypoints, configurable confidence and IoU thresholds, and
+    runtime indicators in portrait and landscape views. The available demonstrations verify the
+    capture-to-display pipeline and task-specific visual outputs. Displayed readings range from
+    11.9 to 21.3 FPS across the supplied screenshots; these observations are not a sustained
+    accuracy or latency benchmark. Controlled evaluation on annotated, combat-relevant data
+    remains future work.
   }
 \end{frontpage}

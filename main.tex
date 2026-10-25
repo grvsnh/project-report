@@ -3,8 +3,10 @@
 \usepackage{pdfpages}
 
 \begin{document}
-  % Use the supplied front sheet so its artwork, wording, capitalization,
+  % Use the maintained institutional front sheet so its artwork, capitalization,
   % spacing, certificate Viva block, and outcome-page margins are preserved.
+  % The report abstract page is maintained separately to satisfy the VTU word
+  % limit and to remain consistent with the evidence reported in Chapter 7.
   \includepdf[pages=1-9,pagecommand={\thispagestyle{empty}}]{front-sheet.pdf}
 
   % The supplied front sheet contains the preliminary pages through Roman vi.
