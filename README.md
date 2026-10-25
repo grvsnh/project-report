@@ -29,6 +29,8 @@ main.tex                         Report entry point and page order
 report.sty                       Shared typography, headings and page commands
 front_layout.tex                 Named front-page placements
 front-sheet.pdf                  Supplied nine-page front matter
+B3 - Abstract.pdf                ICSTIM 2026 abstract submission image source
+Synopsis.pdf                     DRDO Students Development Program synopsis
 sections/                        Editable front matter reference, lists and contents
 chapters/                        Report chapters
 images/                          Logos, banner and diagrams
@@ -77,6 +79,11 @@ cover, certificate Viva area, declaration, acknowledgement, sentence case,
 bold spans, artwork, margins, and vision/mission/outcome layouts match the
 provided reference. The corresponding editable files in `sections/` remain in
 the repository for reference but are not emitted by the final build.
+
+After the references, the report includes the submitted ICSTIM 2026 abstract
+and the DRDO Students Development Program synopsis as two additional pages
+before Appendix A. Their page entries appear in the two-page contents and as
+`A-i` and `B-i` in the List of Snaps.
 
 The generated index, contents, figure list, table list, and snap list continue
 to use the named placements in `front_layout.tex`. For future source-based
