@@ -126,10 +126,13 @@ Table~\ref{tab:runtime}. The values span 11.9--21.3 FPS and 30.8--62.9 ms of dis
 refer to different scenes and task modes, so they should not be treated as an average over one
 uniform experiment or used to rank model variants without additional test controls.
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \caption{Displayed Runtime Readings}\label{tab:runtime}
-  \begin{tabular}{p{7.3cm}crr}
+  \begin{tabular}{>{\raggedright\arraybackslash}p{7.3cm}
+                  >{\centering\arraybackslash}p{2.1cm}
+                  >{\centering\arraybackslash}p{1.4cm}
+                  >{\centering\arraybackslash}p{1.8cm}}
     \toprule
     \textbf{Exhibit} & \textbf{View} & \textbf{FPS} & \textbf{Time (ms)} \\
     \midrule
@@ -168,7 +171,62 @@ depends on capture, scheduling, rendering, and averaging behavior. It does not s
 stable real-time performance under all conditions. That limitation is retained so that future measured
 results can be added without contradicting the present evidence.
 
+\subsection{Observation-Based Comparison}
+The six displayed readings can still be compared descriptively when their context is retained. The
+portrait segmentation exhibit has the lowest displayed FPS and the largest displayed processing time
+in the table. This is consistent with segmentation presenting a denser output than a simple detection
+box, but the available evidence does not isolate the task from the scene, device state, or application
+averaging. It is therefore an observation about the supplied configuration, not a measured general
+property of every segmentation run.
+
+The landscape group-pose exhibit has the highest displayed FPS among the six readings, while the
+portrait group-pose exhibit reports a lower displayed FPS. The difference shows why orientation should
+be recorded, but it does not prove that landscape processing is intrinsically faster. The scenes may
+contain different numbers of visible people, the preview dimensions may differ, and the timing field may
+use a rolling or task-specific calculation. A controlled comparison would hold the device, scene,
+model, resolution, and number of samples constant while changing only the orientation.
+
+The visual exhibits provide a second form of comparison. Detection outputs are comparatively sparse
+and easy to inspect, segmentation outputs cover regions of the image, and pose outputs add several
+keypoints and connecting lines. As visual complexity increases, readability and overlay placement become
+important interface concerns even when the underlying model call is unchanged. The screenshots support
+this interface-level comparison, but they do not establish which task is more accurate or more suitable
+for deployment.
+
 \label{end:runtime}
+\subsection{Recommended Evaluation Protocol}
+The next evaluation should begin with a documented test set that represents the intended operating
+conditions. It should identify the object classes, image sources, scene conditions, distance and scale
+ranges, lighting variation, occlusion cases, and the annotation procedure. A fixed test split must be
+kept separate from any training or fine-tuning data. If the project later introduces combat-specific
+classes, the class definitions and annotation policy should be stated before scores are calculated.
+
+For accuracy, predictions should be matched against the annotations using a declared IoU rule and the
+same confidence-processing policy across runs. Precision, recall, and mAP should then be reported with
+the dataset size and split, rather than as a single unexplained percentage. For pose or segmentation,
+the appropriate task-specific metrics should be selected instead of reusing an object-detection score.
+The report should also identify false positives and missed detections because a high-level aggregate can
+hide failures on small, distant, or partially occluded objects.
+
+For performance, the device model, Android version, build, model export, input resolution, execution
+delegate, battery condition, and thermal state should be recorded. Each task and orientation should be
+run for a warm-up period followed by a fixed measurement interval. The resulting samples should be
+reported with a mean and spread, together with minimum and maximum values when useful. Camera-to-display
+latency should be measured separately from model processing time if the system is intended for responsive
+operator feedback. Power and thermal measurements should use a documented instrument or system method.
+
+The test procedure should include both normal and adverse conditions. Normal cases can verify stable
+overlays and predictable controls, while adverse cases can cover motion, glare, low light, clutter,
+occlusion, changing distance, and orientation transitions. The evaluator should record whether the
+application recovers after permission interruption, a dropped frame, or a temporary model error. These
+observations are part of reliability evidence and should be discussed alongside numerical metrics.
+
+Until this protocol is completed, the current results should be described as a functional demonstration
+with configuration-specific runtime observations. That description is useful because it identifies the
+working capture, inference, mapping, and rendering path while leaving a clear method for the next study.
+It also prevents the displayed confidence value from being mistaken for accuracy and prevents a single
+successful frame from being described as sustained real-time operation.
+
 \section{Discussion and Limitations}\label{sec:discussion}
 The demonstration establishes a functional foundation of live camera input, on-device inference,
 task-specific visualization, configurable thresholds, and displayed runtime information, supporting

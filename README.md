@@ -14,25 +14,21 @@ The current report package is the final checked report version before physical
 printing and approval:
 
 - final PDF: `main.pdf`;
-- total length: **55 pages**;
+- total length: **60 pages**;
 - page size: **A4** (`595.28 × 841.89 pt`);
-- Chapter 6 — Implementation: body pages **22–26**;
-- Chapter 7 — Result: body pages **27–32**;
-- References begin on body page **34**;
-- ICSTIM submission appears on page **36**;
-- DRDO synopsis appears on page **37**;
-- Appendix A occupies pages **38–40**;
-- Appendix B occupies page **41**;
+- final file size: approximately **12.9 MB**, below the requested 15 MB limit;
+- Chapter 6 — Implementation: body pages **22–29**;
+- Chapter 7 — Result: body pages **30–37**;
+- Conclusion: body page **38**;
+- References: body pages **39–40**;
+- ICSTIM submission appears on page **41**;
+- DRDO synopsis appears on page **42**;
+- Appendix A occupies pages **43–45**;
+- Appendix B occupies page **46**;
 - the final Table of Contents remains within two pages;
 - the final abstract is below the VTU 100-word limit and uses the available
   evidence-aligned 11.9–21.3 FPS wording;
 - the working tree was clean after verification.
-
-The last documentation and compliance commit is:
-
-```text
-a4efd20 docs: finalize VTU compliance documentation
-```
 
 The LaTeX build completed successfully with no fatal errors, undefined
 references, or overfull boxes. `git diff --check` passed and generated auxiliary
@@ -47,17 +43,21 @@ separate software-source handover.
 ## Build the report
 
 The report uses XeLaTeX, `latexmk`, Biber, `biblatex-ieee`, and Times New Roman.
-Run these commands from the repository root:
+Run these commands from the repository root. Rebuild the institutional front
+sheet first when any file under `sections/01_...` through `sections/09_...` or
+`front_layout.tex` changes:
 
 ```sh
+latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error front-sheet.tex
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
 pdfinfo main.pdf                 # page count and A4 check
 pdffonts main.pdf                # embedded-font check
+latexmk -c front-sheet.tex       # remove front-sheet auxiliary files
 latexmk -c main.tex              # remove generated auxiliary files, keep PDF
 ```
 
 The successful build creates `main.pdf` in the repository root. The final
-checked report is 55 A4 pages. A clean build requires XeLaTeX, `latexmk`, Biber,
+checked report is 60 A4 pages. A clean build requires XeLaTeX, `latexmk`, Biber,
 the LaTeX packages used by `report.sty`, and licensed Times New Roman font files
 available to XeLaTeX. Microsoft font files are not redistributed in this
 repository.
@@ -79,6 +79,7 @@ verify the font lookup before comparing line breaks or page counts.
 
 ```text
 main.tex                                      Report entry point and page order
+front-sheet.tex                               Rebuildable institutional front sheet
 report.sty                                    Shared typography and layout rules
 front_layout.tex                              Named front-page coordinates
 front-sheet.pdf                               Maintained nine-page institutional front matter
@@ -86,6 +87,8 @@ sections/                                     Front matter, lists, contents, sub
 chapters/                                     Main report chapters
 appendices/                                   Source listing and project photographs
 images/                                       Logos, diagrams, screenshots and photos
+images/icstim-abstract-cropped.jpg             Cropped raster of the ICSTIM submission
+images/drdo-synopsis-cropped.jpg               Cropped raster of the DRDO synopsis
 references.bib                                Bibliography database
 B3 - Abstract.pdf                             Submitted ICSTIM abstract artifact
 Synopsis.pdf                                  Submitted DRDO synopsis artifact
@@ -104,12 +107,13 @@ The body chapters are:
 7. Result
 8. Conclusion
 
-`main.tex` controls the emitted order. The report currently imports the supplied
+`main.tex` controls the emitted order. The report currently imports the maintained
 nine-page `front-sheet.pdf` so that the institutional cover, certificate,
 declaration, acknowledgement, abstract page, mission/vision pages, programme
 outcomes, artwork, and fixed margins remain stable. The editable files under
-`sections/` document the same front matter and remain useful as source/reference
-material. The main build does not emit those editable front-page files directly.
+`sections/` document the same front matter and are used to regenerate the
+maintained front sheet. The main build imports that generated nine-page PDF as a
+stable front-matter unit.
 
 ## VTU 2022-scheme requirements followed
 
@@ -240,10 +244,12 @@ institutional-template exception to the normal body style.
 
 ### Front-sheet fonts and fixed layout
 
-The supplied institutional PDF contains its own embedded fonts and artwork. The
-main report body is Times New Roman, but the imported institutional pages may
-contain Calibri or Arial because the supplied template was preserved. This is
-intentional: changing those pages would alter the approved college design.
+The nine-page institutional front sheet is now regenerated from the editable
+LaTeX front-matter source with Times New Roman. The supplied BTI banner and VTU
+logo remain artwork images, while the surrounding cover, certificate,
+declaration, acknowledgement, abstract, mission, vision, PEO, PO, and PSO text
+is typeset in Times New Roman. The final `pdffonts` audit reports only embedded
+Times New Roman text fonts.
 
 The abstract page in the report front matter was corrected to stay below the VTU
 100-word limit and to agree with the available evidence. The separate
@@ -292,10 +298,11 @@ approved or signed.
 
 ### Page count
 
-VTU does not prescribe a 55-page count in the supplied guideline. The report was
-kept at **55 pages** because that was the agreed project requirement. Page count
-was achieved by adding technically relevant detail only to Chapters 6 and 7,
-without inventing new experimental results.
+VTU does not prescribe a 60-page count in the supplied guideline. The report was
+expanded to **60 pages** following the guide's review. The added material is
+limited to technically relevant implementation, validation, runtime
+interpretation, evaluation protocol, and conclusion detail in Chapters 6, 7, and
+8; it does not invent new experimental results.
 
 ## Evidence and claims in the final report
 
@@ -372,8 +379,11 @@ Before printing and signing, confirm each item with the guide and department:
 - `sections/14_submissions.tex` — ICSTIM and DRDO supporting pages.
 - `references.bib` — bibliography records.
 
-When changing the report abstract, update the emitted `front-sheet.pdf` page as
-well, because `main.tex` imports that PDF as the institutional front matter.
+When changing the report abstract, rebuild the maintained `front-sheet.pdf` from
+the front-matter source before rebuilding `main.pdf`, because `main.tex` imports
+that PDF as the institutional front matter. The ICSTIM and DRDO source PDFs are
+converted to cropped JPEG evidence images in `images/` so that their content is
+larger and clearer on the final submission pages.
 
 ## Final verification commands
 
@@ -386,7 +396,7 @@ git diff --check
 latexmk -c main.tex
 ```
 
-The expected final PDF check is 55 pages with an A4 page size. Build warnings
+The expected final PDF check is 60 pages with an A4 page size. Build warnings
 about underfull boxes in long prose or tables are not fatal; any overfull box,
 undefined reference, missing font, or fatal error must be investigated before
 printing.

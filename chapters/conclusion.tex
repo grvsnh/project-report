@@ -1,20 +1,30 @@
 \chapter{CONCLUSION}\label{ch:conclusion}
 \begingroup\emergencystretch=3em
 \noindent VeerDrishti has progressed from a proposed combat-vision framework to an Android prototype that
-connects camera capture, on-device inference, and visual output. The demonstration identifies
-CameraX, YOLO26 Nano task variants, Flutter YOLOView, and Logcat as the
-main implementation components. The presented screenshots demonstrate object detection,
-segmentation, and multi-person pose overlays in portrait and landscape views, with configurable
-thresholds and runtime indicators. This establishes the application's capture-to-display
-foundation and provides concrete evidence for the Implementation and Result chapters.
+connects camera capture, on-device inference, and visual output. The implementation combines CameraX
+for live image acquisition, YOLO26 Nano task variants for the demonstrated vision modes, Flutter
+YOLOView for the application-facing integration, and Logcat for development diagnostics. The presented
+screenshots demonstrate object detection, segmentation, and multi-person pose overlays in portrait and
+landscape views, with configurable confidence and IoU thresholds and displayed runtime indicators. The
+implementation also treats camera orientation as part of the processing path: a frame must be rotated,
+mapped, resized, and rendered consistently so that a box, mask, or keypoint remains attached to the
+visible object after the device changes orientation. Together, these elements establish a practical
+capture-to-display foundation rather than an isolated model demonstration. They also provide concrete
+evidence for the Implementation and Result chapters, where the integration boundaries, visible outputs,
+runtime readings, and evidence limitations are recorded separately.
 
-The observed runtime readings and visual exhibits do not establish battlefield accuracy,
-sustained performance, or a reduction in casualties. Those outcomes remain project objectives
-that require combat-relevant data and controlled evaluation. The next development steps are to
-document the deployed configuration, evaluate accuracy and latency on repeatable test cases,
-refine the interface, and validate the selected model for the intended object classes. Thermal
-fusion, open-vocabulary recognition, and persistent event recording remain possible extensions
-rather than demonstrated features. By grounding further development in measured evidence,
-VeerDrishti can advance toward a more reliable, portable visual decision-support system.
+The observed runtime readings and visual exhibits do not establish battlefield accuracy, sustained
+performance, or a reduction in casualties. Those outcomes remain project objectives that require
+combat-relevant data, a documented device and model configuration, repeatable test cases, and controlled
+evaluation. The next development steps are therefore to preserve the selected build and execution
+configuration, collect repeated measurements for each task and orientation, compare predictions with
+ground-truth annotations, and report accuracy, latency, variability, power, and thermal behavior using
+defined procedures. The interface should also be refined for readability when several objects, masks,
+or keypoints appear together, while failure paths such as denied camera permission, missing models,
+orientation changes, occlusion, and interrupted frames should be exercised deliberately. Thermal fusion,
+open-vocabulary recognition, persistent event recording, and combat-specific fine-tuning remain possible
+extensions rather than demonstrated features. By grounding further development in measured evidence and
+reproducible checks, VeerDrishti can advance toward a more reliable, portable visual decision-support
+system without overstating what the current prototype has already proved.
 \label{end:conclusion}
 \par\endgroup

@@ -4,7 +4,7 @@
 \RequirePackage[backend=biber,style=ieee]{biblatex}
 \RequirePackage[top=.75in,bottom=.75in,left=1.25in,right=1in,includehead]{geometry}
 \RequirePackage{array,booktabs,caption,enumitem,etoolbox,fancyhdr,fontspec,graphicx,
-  longtable,pgfgantt,refcount,setspace,tikz,titlesec,xcolor}
+  float,longtable,pgfgantt,refcount,setspace,tikz,titlesec,xcolor}
 \RequirePackage[hidelinks]{hyperref}
 \usetikzlibrary{calc}
 \setmainfont{Times New Roman}
@@ -24,7 +24,11 @@
 \newcommand{\AcademicYear}{2026--2027}
 \hypersetup{
   pdftitle={VeerDrishti: Combat Vision System — Major Project Report},
-  pdfauthor={Gaurav Chauhan and Gaurav Singh}
+  pdfauthor={Gaurav Chauhan and Gaurav Singh},
+  pdfsubject={},
+  pdfkeywords={},
+  pdfcreator={},
+  pdfproducer={}
 }
 \addbibresource{references.bib}
 \captionsetup[table]{skip=12pt}
@@ -32,7 +36,7 @@
 \onehalfspacing
 % VTU body formatting uses flush-left paragraphs rather than tab indentation.
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt}
+\setlength{\parskip}{6pt}
 
 % Original headheight + headsep = 24pt; reserve 17pt for its double-rule header.
 \setlength{\headheight}{17pt}

@@ -194,5 +194,108 @@ readable in both orientations, and confidence values should be interpreted as mo
 than as verified accuracy. These considerations do not change the current prototype result, but they
 define the engineering checks needed before the same pipeline could be evaluated in more demanding
 indoor, outdoor, or tactical conditions.
+
+\subsection{Runtime State and Error Handling}
+The capture-to-display path is easier to maintain when its runtime states are explicit. A practical
+sequence is to begin in an uninitialized state, request or confirm camera permission, initialize the
+preview, load the selected model, and only then accept frames for inference. During a task change, the
+interface should retain the last valid preview while the new task is prepared, or show a clear loading
+state if the pipeline must be recreated. Treating these transitions as states prevents a temporary
+camera or model condition from being mistaken for a detection failure.
+
+Camera permission is the first recoverable boundary. If permission is denied, the application should
+explain why the camera is unavailable and provide a route for the user to grant access rather than
+continuing with a null or stale frame. If the activity is paused or the camera is interrupted, the
+preview should be released or reattached according to the CameraX lifecycle. The next accepted frame
+should be checked for valid dimensions, rotation metadata, and an available image buffer before it is
+passed to preprocessing. These checks are ordinary application safeguards, but they are important for
+an inference application because a malformed frame can create misleading downstream symptoms.
+
+Model initialization is a separate state from camera initialization. A model file can be absent,
+incompatible with the selected task, or unable to use the requested execution delegate. The interface
+should report that condition as an initialization error and retain enough diagnostic information to
+identify the model path, task, and delegate. A fallback execution path may be considered during later
+development, but it should be recorded because a change from accelerated to non-accelerated execution
+would affect runtime readings. The current report therefore treats the execution backend as a required
+configuration field rather than assuming that all devices use the same path.
+
+Frame processing also needs a controlled response to intermittent failures. A single frame that cannot
+be decoded should be logged and skipped without terminating the whole preview, while repeated failures
+should be surfaced as a camera or pipeline warning. Inference exceptions should not leave an old overlay
+on a new frame without an indication that the result is stale. Clearing or timestamping the overlay is
+preferable to presenting an earlier prediction as if it belonged to the current image. These behaviours
+are proposed engineering checks for the next validation pass; the supplied screenshots establish the
+successful path but do not document every recovery state.
+
+The same principle applies to user-controlled settings. A threshold change should be applied at a
+defined point in the pipeline and reflected in the visible control. If the selected task does not use a
+particular setting in the same way as another task, the interface or documentation should make that
+scope clear. The configuration used for a screenshot should be captured with the output so that a later
+review can distinguish a changed threshold from a changed model or scene. This small amount of state
+traceability reduces ambiguity without requiring persistent mission recording.
+
+\subsection{Configuration Traceability}
+Reproducibility depends on recording the conditions under which an output was produced. For each
+demonstration, the minimum record should include the application build, Android version, device model,
+camera orientation, preview dimensions, selected task, model file or model version, confidence
+threshold, IoU threshold, maximum item setting if applicable, and execution backend. The record should
+also identify whether the frame came from a live camera or a static test image. Without these fields,
+two screenshots with different labels or timings cannot be compared reliably.
+
+The orientation record should contain both the source rotation and the display orientation. A label such
+as ``portrait'' alone is insufficient because a camera sensor can deliver a rotated buffer while the
+preview uses a different coordinate convention. The crop or letterbox policy should be recorded as
+well, since the same source frame can produce different overlay geometry when the model input aspect
+ratio changes. Zoom and digital crop settings are also relevant when small objects are being inspected.
+
+Runtime fields should be copied exactly as displayed and should not be silently converted into a new
+metric. If the interface reports FPS, processing time, preprocessing time, inference time, and
+post-processing time, each value should retain its label and unit. The time window, averaging rule, and
+whether the value excludes camera capture should be documented before a formal performance claim is
+made. The present report follows this rule by transcribing the displayed values and keeping the
+interpretation configuration-specific.
+
+This traceability approach also supports debugging. If an overlay is displaced only in landscape
+orientation, the investigation can compare rotation metadata and preview dimensions while holding the
+model and thresholds constant. If inference time increases after a task change, the task and model can
+be compared without confusing the result with a different camera scene. If a frame-rate value changes
+after a build change, the application build and delegate record provide a starting point for examining
+the cause. The record therefore serves both future evaluation and ordinary implementation maintenance.
+
+\subsection{Validation Matrix and Reproducible Procedure}
+A later validation pass can be organized as a matrix rather than as a collection of unrelated
+screenshots. The first dimension is task mode: detection, segmentation, and pose. The second is device
+orientation: portrait and landscape. The third is scene condition: clear objects, multiple objects,
+partial occlusion, small or distant objects, camera motion, and illumination variation. For every cell,
+the same model and documented device should be used, with repeated samples collected under the same
+threshold configuration. Empty cells should be reported as untested rather than inferred from a nearby
+condition.
+
+The functional part of the matrix asks whether the camera preview initializes, the selected task loads,
+the output type is rendered, and the overlay remains aligned after orientation and preview-size changes.
+The measurement part asks for repeated frame-rate and processing-time samples, together with the exact
+time window and device state. The accuracy part requires labelled reference data and a defined matching
+rule before precision, recall, or mAP can be computed. Keeping these three parts separate prevents a
+successful visual overlay from being treated as evidence for all three.
+
+A reproducible run can follow the sequence below. First, record the device, build, model, task, and
+threshold configuration. Second, start the application from a known lifecycle state and confirm camera
+permission. Third, allow the preview to stabilize before collecting observations. Fourth, capture a
+fixed number of samples for the selected scene and preserve the displayed runtime fields. Fifth, repeat
+the run after changing only one controlled variable, such as orientation or task mode. Finally, store
+the observations with enough context to identify the image, configuration, and any failure or dropped
+frame. This procedure does not create a benchmark by itself; it defines the evidence needed for one.
+
+The matrix should also include negative and recovery cases. A denied permission, unavailable model,
+unsupported task, invalid frame, interrupted camera session, and overlay mismatch are all meaningful
+results because they identify the boundary of reliable operation. The correct response is to record the
+failure and its recovery behaviour, not to omit it from the report. For a safety-sensitive concept,
+clear failure indication is part of system quality even when no detection metric is involved.
+
+The current prototype material supports the successful functional path and supplies useful examples for
+the first matrix cells. It does not provide the device configuration, repeated sample count, annotated
+ground truth, or recovery logs required to complete the full matrix. Stating that boundary keeps the
+implementation chapter reproducible and allows future measured results to be added without rewriting
+the existing evidence.
 \label{end:integration}\label{end:implementation}
 \par\endgroup
