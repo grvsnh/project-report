@@ -14,20 +14,25 @@ The current report package is the final checked report version before physical
 printing and approval:
 
 - final PDF: `main.pdf`;
-- total length: **60 pages**;
+- total length: **62 pages**;
 - page size: **A4** (`595.28 × 841.89 pt`);
 - final file size: approximately **12.9 MB**, below the requested 15 MB limit;
-- Chapter 6 — Implementation: body pages **22–29**;
-- Chapter 7 — Result: body pages **30–37**;
-- Conclusion: body page **38**;
-- References: body pages **39–40**;
-- ICSTIM submission appears on page **41**;
-- DRDO synopsis appears on page **42**;
-- Appendix A occupies pages **43–45**;
-- Appendix B occupies page **46**;
-- the final Table of Contents remains within two pages;
+- Chapter 2 — Literature Survey: body pages **6–15**;
+- Chapter 6 — Implementation: body pages **23–30**;
+- Chapter 7 — Result: body pages **31–38**;
+- Conclusion: body page **39**;
+- References: body pages **40–41**;
+- ICSTIM submission appears on page **42**;
+- DRDO synopsis appears on page **43**;
+- Appendix A occupies pages **44–46**;
+- Appendix B occupies page **47**;
+- the final Table of Contents occupies three pages, labelled **vii–ix**;
 - the final abstract is below the VTU 100-word limit and uses the available
   evidence-aligned 11.9–21.3 FPS wording;
+- the contents entries carry no citation markers, while each of the eleven
+  Literature Survey section headings ends with its source marker `[1]`–`[11]`;
+- every contents page number is taken from the label at the end of the section
+  it refers to, so a section that stays on one page shows a single number;
 - the working tree was clean after verification.
 
 The LaTeX build completed successfully with no fatal errors, undefined
@@ -57,7 +62,7 @@ latexmk -c main.tex              # remove generated auxiliary files, keep PDF
 ```
 
 The successful build creates `main.pdf` in the repository root. The final
-checked report is 60 A4 pages. A clean build requires XeLaTeX, `latexmk`, Biber,
+checked report is 62 A4 pages. A clean build requires XeLaTeX, `latexmk`, Biber,
 the LaTeX packages used by `report.sty`, and licensed Times New Roman font files
 available to XeLaTeX. Microsoft font files are not redistributed in this
 repository.
@@ -89,6 +94,7 @@ appendices/                                   Source listing and project photogr
 images/                                       Logos, diagrams, screenshots and photos
 images/icstim-abstract-cropped.jpg             Cropped raster of the ICSTIM submission
 images/drdo-synopsis-cropped.jpg               Cropped raster of the DRDO synopsis
+literature_titles.tex                          Short titles used by the contents and bookmarks
 references.bib                                Bibliography database
 B3 - Abstract.pdf                             Submitted ICSTIM abstract artifact
 Synopsis.pdf                                  Submitted DRDO synopsis artifact
@@ -181,7 +187,8 @@ The report includes the VTU-style flow:
 13. appendices.
 
 The preliminary material uses Roman page labels and the report chapters use
-Arabic page numbers. The generated Table of Contents is kept within two pages.
+Arabic page numbers. The generated Table of Contents is kept within three pages
+(labels vii–ix).
 
 ### Chapter content
 
@@ -299,10 +306,11 @@ approved or signed.
 ### Page count
 
 VTU does not prescribe a 60-page count in the supplied guideline. The report was
-expanded to **60 pages** following the guide's review. The added material is
+expanded to **62 pages** following the guide's review. The added material is
 limited to technically relevant implementation, validation, runtime
 interpretation, evaluation protocol, and conclusion detail in Chapters 6, 7, and
-8; it does not invent new experimental results.
+8, plus the eleven-paper Literature Survey in Chapter 2; it does not invent new
+experimental results.
 
 ## Evidence and claims in the final report
 
@@ -373,6 +381,10 @@ Before printing and signing, confirm each item with the guide and department:
 - `report.sty` — body font, margins, spacing, heading sizes, numbering depth, and
   running header/footer rules.
 - `front_layout.tex` — measured coordinates for editable institutional pages.
+- `chapters/literature_review.tex` — Chapter 2 survey text, section titles and
+  their citation markers, and the end-of-section labels used for contents pages.
+- `literature_titles.tex` — short section titles shared by the contents entries
+  and the PDF bookmarks, so markers stay out of the Table of Contents.
 - `sections/10_contents.tex` — fixed contents placement and generated labels.
 - `sections/11_figures.tex`, `sections/12_tables.tex`, and `sections/13_snaps.tex`
   — list membership and labels.
@@ -396,7 +408,7 @@ git diff --check
 latexmk -c main.tex
 ```
 
-The expected final PDF check is 60 pages with an A4 page size. Build warnings
+The expected final PDF check is 62 pages with an A4 page size. Build warnings
 about underfull boxes in long prose or tables are not fatal; any overfull box,
 undefined reference, missing font, or fatal error must be investigated before
 printing.

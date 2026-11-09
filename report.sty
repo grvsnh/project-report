@@ -183,32 +183,12 @@
 \newcommand{\FrontLine}[2]{\csname front@line@#1\endcsname{#2}}
 \newcommand{\FrontParagraph}[2]{\csname front@paragraph@#1\endcsname{#2}}
 \newcommand{\FrontRule}[1]{\csname front@rule@#1\endcsname}
-\newcommand{\FrontPageTwoContents}{%
+% Continuation contents pages share the page-two column positions.  Row
+% coordinates live in front_layout.tex so the three contents pages have a
+% single source of measured positions.
+\newcommand{\ContentsContinuationLayout}{%
   \renewcommand{\ContentsTitleX}{164.78}%
   \renewcommand{\ContentsNumberX}{119.90}%
-  \SetContentsRow{functional}{78.24}%
-  \SetContentsRow{nonfunctional}{102.38}%
-  \SetContentsRow{hardware}{126.14}%
-  \SetContentsRow{software}{150.22}%
-  \SetContentsRow{acceptance}{174.30}%
-  \SetContentsRow{design}{198.06}%
-  \SetContentsRow{architecture}{221.97}%
-  \SetContentsRow{workflow}{245.85}%
-  \SetContentsRow{scheduling}{270.21}%
-  \SetContentsRow{gantt}{294.69}%
-  \SetContentsRow{progress}{319.05}%
-  \SetContentsRow{implementation}{343.41}%
-  \SetContentsRow{prototype}{367.41}%
-  \SetContentsRow{modules}{391.41}%
-  \SetContentsRow{pipeline}{415.41}%
-  \SetContentsRow{controls}{439.41}%
-  \SetContentsRow{integration}{463.41}%
-  \SetContentsRow{result}{487.41}%
-  \SetContentsRow{demonstration}{511.41}%
-  \SetContentsRow{visual}{535.41}%
-  \SetContentsRow{runtime}{559.41}%
-  \SetContentsRow{discussion}{583.41}%
-  \SetContentsRow{conclusion}{607.41}%
 }
 
 % Artwork placements live here so the page sources do not need image coordinates.
@@ -270,5 +250,21 @@
   \FrontLineRaw{\ContentsTitleX}{\ContentsY{#1}}{0}{12}{\textbf{\nameref{#2}}}%
   \FrontLineRaw{456.34}{\ContentsY{#1}}{30}{12}{\hfill\textbf{\PageRange{#2}{#3}}\hfill}%
 }
+% Full paper titles exceed one line of the contents column, so they are set as
+% a justified-width block whose first baseline sits on the declared row height.
+\newcommand{\ContentsRowWrap}[3]{%
+  \node[anchor=base west,inner sep=0pt,outer sep=0pt]
+    at ($(current page.north west)+(\ContentsTitleX bp,-\ContentsY{#1}bp)$)
+    {\begin{minipage}[t]{286bp}%
+      \setstretch{1}\fontsize{12bp}{15bp}\selectfont\raggedright
+      \setlength{\parindent}{0pt}\setlength{\parfillskip}{0pt plus1fil}%
+      \ref{#2}\ \nameref{#2}\par
+    \end{minipage}};%
+  \FrontLineRaw{456.34}{\ContentsY{#1}}{30}{12}{\hfill\PageRange{#2}{#3}\hfill}%
+}
 
+% Surveyed-paper titles are needed by the contents rows, which \nameref into the
+% literature chapter, so they are declared in the preamble rather than in the
+% chapter body.
+\input{literature_titles}
 \input{front_layout}

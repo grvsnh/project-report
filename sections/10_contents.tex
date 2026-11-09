@@ -18,12 +18,11 @@
   \FrontLine{contents-program-page}{\hfill\textbf{iv}\hfill}
   \FrontLine{contents-outcomes-page}{\hfill\textbf{v}\hfill}
   \FrontLine{contents-specific-outcomes-page}{\hfill\textbf{vi}\hfill}
-  % The generated contents and list pages follow the six numbered front-sheet
-  % pages.
-  \FrontLine{contents-table-of-contents-page}{\hfill\textbf{vii--viii}\hfill}
-  \FrontLine{contents-figures-page}{\hfill\textbf{ix}\hfill}
-  \FrontLine{contents-tables-page}{\hfill\textbf{x}\hfill}
-  \FrontLine{contents-snaps-page}{\hfill\textbf{xi}\hfill}
+  % The generated contents now occupies three pages and the lists follow it.
+  \FrontLine{contents-table-of-contents-page}{\hfill\textbf{vii--ix}\hfill}
+  \FrontLine{contents-figures-page}{\hfill\textbf{x}\hfill}
+  \FrontLine{contents-tables-page}{\hfill\textbf{xi}\hfill}
+  \FrontLine{contents-snaps-page}{\hfill\textbf{xii}\hfill}
   \FrontRule{contents-divider}
   \FrontLine{contents-body-heading}{\textbf{TABLE OF CONTENTS}}
   \FrontLine{contents-chapter-label}{\textbf{Chapter}}
@@ -39,20 +38,36 @@
   \ContentsRow{sdg}{sec:sdg}{end:sdg}
   \ContentsRow{feasibility}{sec:feasibility}{end:feasibility}
   \ContentsRow{work}{sec:work}{end:work}
-  \ContentsChapter{literature}{ch:literature}{end:literature}
-  \ContentsRow{literature-review}{sec:literature-review}{end:literature-review}
-  \ContentsRow{comparison}{sec:comparison}{end:comparison}
-  \ContentsChapter{requirements}{ch:requirements}{end:requirements}
 \end{frontpage}
 
 \begin{frontpage}
-  \label{front:contents-end}
-  \FrontPageTwoContents
+  \label{front:contents-2}
+  \ContentsContinuationLayout
+  \ContentsChapter{literature}{ch:literature}{end:literature}
+  % One contents entry per surveyed paper, in the order used by the chapter.
+  \ContentsRowWrap{base_paper}{sec:base_paper}{end:base_paper}
+  \ContentsRowWrap{supplementary_paper_1}{sec:supplementary_paper_1}{end:supplementary_paper_1}
+  \ContentsRowWrap{supplementary_paper_2}{sec:supplementary_paper_2}{end:supplementary_paper_2}
+  \ContentsRowWrap{supplementary_paper_3}{sec:supplementary_paper_3}{end:supplementary_paper_3}
+  \ContentsRowWrap{supplementary_paper_4}{sec:supplementary_paper_4}{end:supplementary_paper_4}
+  \ContentsRowWrap{supplementary_paper_5}{sec:supplementary_paper_5}{end:supplementary_paper_5}
+  \ContentsRowWrap{supplementary_paper_6}{sec:supplementary_paper_6}{end:supplementary_paper_6}
+  \ContentsRowWrap{supplementary_paper_7}{sec:supplementary_paper_7}{end:supplementary_paper_7}
+  \ContentsRowWrap{supplementary_paper_8}{sec:supplementary_paper_8}{end:supplementary_paper_8}
+  \ContentsRowWrap{supplementary_paper_9}{sec:supplementary_paper_9}{end:supplementary_paper_9}
+  \ContentsRowWrap{supplementary_paper_10}{sec:supplementary_paper_10}{end:supplementary_paper_10}
+  \ContentsRow{comparison}{sec:comparison}{end:comparison}
+  \ContentsChapter{requirements}{ch:requirements}{end:requirements}
   \ContentsRow{functional}{sec:functional}{end:functional}
   \ContentsRow{nonfunctional}{sec:nonfunctional}{end:nonfunctional}
   \ContentsRow{hardware}{sec:hardware}{end:hardware}
   \ContentsRow{software}{sec:software}{end:software}
   \ContentsRow{acceptance}{sec:acceptance}{end:acceptance}
+\end{frontpage}
+
+\begin{frontpage}
+  \label{front:contents-end}
+  \ContentsContinuationLayout
   \ContentsChapter{design}{ch:design}{end:design}
   \ContentsRow{architecture}{sec:architecture}{end:architecture}
   \ContentsRow{workflow}{sec:workflow}{end:workflow}
