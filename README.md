@@ -16,7 +16,11 @@ printing and approval:
 - final PDF: `main.pdf`;
 - total length: **65 pages**;
 - page size: **A4** (`595.28 × 841.89 pt`);
-- final file size: approximately **12.9 MB**, below the requested 15 MB limit;
+- final file size: approximately **9.5 MB**, below the requested 15 MB limit;
+- every raster image in the report is a PNG;
+- PDF page labels follow the printed folios: the three cover pages are
+  unnumbered, the front matter reads **i–xii**, and the body runs **1–50**, so a
+  viewer's page box matches the page in hand;
 - Chapter 2 — Literature Survey: body pages **6–15**;
 - Chapter 6 — Implementation: body pages **23–30**;
 - Chapter 7 — Result: body pages **31–38**;
@@ -60,6 +64,7 @@ sheet first when any file under `sections/01_...` through `sections/09_...` or
 ```sh
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error front-sheet.tex
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+python3 tools/set_page_labels.py main.pdf   # viewer page labels i–xii, 1–50
 pdfinfo main.pdf                 # page count and A4 check
 pdffonts main.pdf                # embedded-font check
 latexmk -c front-sheet.tex       # remove front-sheet auxiliary files
@@ -67,7 +72,11 @@ latexmk -c main.tex              # remove generated auxiliary files, keep PDF
 ```
 
 The successful build creates `main.pdf` in the repository root. The final
-checked report is 65 A4 pages. A clean build requires XeLaTeX, `latexmk`, Biber,
+checked report is 65 A4 pages. `tools/set_page_labels.py` must run after
+`latexmk`: LaTeX cannot express the unnumbered cover range, so the script
+rewrites the page-label dictionary of the built PDF (expanding only object
+streams, then patching the catalogue at its original byte length) and leaves
+every image and font stream untouched. A clean build requires XeLaTeX, `latexmk`, Biber,
 the LaTeX packages used by `report.sty`, and licensed Times New Roman font files
 available to XeLaTeX. Microsoft font files are not redistributed in this
 repository.
@@ -97,11 +106,14 @@ sections/                                     Front matter, lists, contents, sub
 chapters/                                     Main report chapters
 appendices/                                   Source listing and project photographs
 images/                                       Logos, diagrams, screenshots and photos
-images/icstim-abstract-cropped.jpg             Cropped raster of the ICSTIM submission
+images/icstim-abstract-cropped.png             Cropped raster of the ICSTIM submission
 images/with_guide.png                          Project group with the guide and awards
 images/best_paper.png                          Best Paper Award presentation, ICSTIM 2026
 images/best_project.png                        Best Project Award, college project expo
-images/drdo-synopsis-cropped.jpg               Cropped raster of the DRDO synopsis
+images/drdo-synopsis-cropped.png               Cropped raster of the DRDO synopsis
+images/review01-upright.png                    Project review photograph 1
+images/review02-upright.png                    Project review photograph 2
+tools/set_page_labels.py                       Writes the PDF page labels after the build
 literature_titles.tex                          Short titles used by the contents and bookmarks
 references.bib                                Bibliography database
 B3 - Abstract.pdf                             Submitted ICSTIM abstract artifact
@@ -411,13 +423,15 @@ Before printing and signing, confirm each item with the guide and department:
 When changing the report abstract, rebuild the maintained `front-sheet.pdf` from
 the front-matter source before rebuilding `main.pdf`, because `main.tex` imports
 that PDF as the institutional front matter. The ICSTIM and DRDO source PDFs are
-converted to cropped JPEG evidence images in `images/` so that their content is
+converted to cropped PNG evidence images in `images/` so that their content is
 larger and clearer on the final submission pages.
 
 ## Final verification commands
 
 ```sh
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+python3 tools/set_page_labels.py main.pdf
+qpdf --check main.pdf            # page-label patch keeps the file valid
 pdfinfo main.pdf | awk '/^(Pages|Page size):/ {print}'
 pdffonts main.pdf
 grep -nE '(^!|Undefined|undefined|multiply defined|Overfull|Emergency stop|Fatal error|There were undefined)' main.log

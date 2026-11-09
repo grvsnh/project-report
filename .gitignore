@@ -11,3 +11,5 @@
 *.run.xml
 *.synctex.gz
 *.xdv
+__pycache__/
+*.pyc
