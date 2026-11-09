@@ -14,7 +14,7 @@ The current report package is the final checked report version before physical
 printing and approval:
 
 - final PDF: `main.pdf`;
-- total length: **62 pages**;
+- total length: **65 pages**;
 - page size: **A4** (`595.28 × 841.89 pt`);
 - final file size: approximately **12.9 MB**, below the requested 15 MB limit;
 - Chapter 2 — Literature Survey: body pages **6–15**;
@@ -22,10 +22,14 @@ printing and approval:
 - Chapter 7 — Result: body pages **31–38**;
 - Conclusion: body page **39**;
 - References: body pages **40–41**;
-- ICSTIM submission appears on page **42**;
+- ICSTIM 2026 paper presented on **29 October 2026**, page **42**, with the
+  **Best Paper Award** recorded on the same page;
 - DRDO synopsis appears on page **43**;
-- Appendix A occupies pages **44–46**;
-- Appendix B occupies page **47**;
+- College Project Expo appears on page **44**, with the **Best Project Award**;
+- KSCST submission page appears on page **45** and is marked TBD (to be done);
+- Appendix A occupies pages **46–48**;
+- Appendix B occupies pages **49–50** and carries the guide, award, and review
+  photographs;
 - the final Table of Contents occupies three pages, labelled **vii–ix**;
 - the final abstract is below the VTU 100-word limit and uses the available
   evidence-aligned 11.9–21.3 FPS wording;
@@ -33,7 +37,8 @@ printing and approval:
   Literature Survey section headings ends with its source marker `[1]`–`[11]`;
 - every contents page number is taken from the label at the end of the section
   it refers to, so a section that stays on one page shows a single number;
-- the working tree was clean after verification.
+- the report package is 65 pages and closes with the submission record and the
+  photograph appendix;
 
 The LaTeX build completed successfully with no fatal errors, undefined
 references, or overfull boxes. `git diff --check` passed and generated auxiliary
@@ -62,7 +67,7 @@ latexmk -c main.tex              # remove generated auxiliary files, keep PDF
 ```
 
 The successful build creates `main.pdf` in the repository root. The final
-checked report is 62 A4 pages. A clean build requires XeLaTeX, `latexmk`, Biber,
+checked report is 65 A4 pages. A clean build requires XeLaTeX, `latexmk`, Biber,
 the LaTeX packages used by `report.sty`, and licensed Times New Roman font files
 available to XeLaTeX. Microsoft font files are not redistributed in this
 repository.
@@ -93,6 +98,9 @@ chapters/                                     Main report chapters
 appendices/                                   Source listing and project photographs
 images/                                       Logos, diagrams, screenshots and photos
 images/icstim-abstract-cropped.jpg             Cropped raster of the ICSTIM submission
+images/with_guide.png                          Project group with the guide and awards
+images/best_paper.png                          Best Paper Award presentation, ICSTIM 2026
+images/best_project.png                        Best Project Award, college project expo
 images/drdo-synopsis-cropped.jpg               Cropped raster of the DRDO synopsis
 literature_titles.tex                          Short titles used by the contents and bookmarks
 references.bib                                Bibliography database
@@ -273,11 +281,15 @@ every subsection to display a number, set `secnumdepth` appropriately in
 
 ### Submission pages after References
 
-The report includes the ICSTIM abstract submission and DRDO synopsis after
-References and before Appendix A. These are additional project-submission
+The report includes the ICSTIM 2026 abstract submission and paper presentation,
+the DRDO synopsis, the college project expo entry, and a KSCST submission page
+after References and before Appendix A. These are additional project-submission
 artifacts, not replacements for the VTU report chapters. They are explicitly
 labelled in the Table of Contents and List of Snaps so an evaluator can tell
-where the formal report ends and the supporting submissions begin.
+where the formal report ends and the supporting submissions begin. The ICSTIM
+page records the presentation on 29 October 2026 and the Best Paper Award; the
+expo page records the Best Project Award; the KSCST page is a placeholder marked
+TBD until that submission is made.
 
 ### Certificates, signatures and dates
 
@@ -293,7 +305,10 @@ approved or signed.
 - **Appendix A** contains a representative source-code listing relevant to the
   Android/YOLO integration and camera rotation path. It is not a substitute for
   handing over the complete application source.
-- **Appendix B** contains project photographs.
+- **Appendix B** contains the project photographs: the group with the guide
+  holding the Best Project award certificates and rolling shield, the Best Paper
+  Award presentation at ICSTIM 2026, the Best Project Award at the college
+  project expo, and the two project review photographs.
 - The VTU software-project requirement for a virus-free software disc, complete
   source/read-me material, build procedure, hardware/software requirements, and
   acknowledgement of third-party modules is an external submission deliverable.
@@ -306,7 +321,7 @@ approved or signed.
 ### Page count
 
 VTU does not prescribe a 60-page count in the supplied guideline. The report was
-expanded to **62 pages** following the guide's review. The added material is
+expanded to **65 pages** following the guide's review. The added material is
 limited to technically relevant implementation, validation, runtime
 interpretation, evaluation protocol, and conclusion detail in Chapters 6, 7, and
 8, plus the eleven-paper Literature Survey in Chapter 2; it does not invent new
@@ -388,7 +403,9 @@ Before printing and signing, confirm each item with the guide and department:
 - `sections/10_contents.tex` — fixed contents placement and generated labels.
 - `sections/11_figures.tex`, `sections/12_tables.tex`, and `sections/13_snaps.tex`
   — list membership and labels.
-- `sections/14_submissions.tex` — ICSTIM and DRDO supporting pages.
+- `sections/14_submissions.tex` — inputs the submission pages below;
+- `sections/14a_icstim.tex`, `sections/14b_drdo.tex`, `sections/14c_expo.tex`,
+  and `sections/14d_kscst.tex` — one file per submission page, in contents order.
 - `references.bib` — bibliography records.
 
 When changing the report abstract, rebuild the maintained `front-sheet.pdf` from
@@ -408,7 +425,7 @@ git diff --check
 latexmk -c main.tex
 ```
 
-The expected final PDF check is 62 pages with an A4 page size. Build warnings
+The expected final PDF check is 65 pages with an A4 page size. Build warnings
 about underfull boxes in long prose or tables are not fatal; any overfull box,
 undefined reference, missing font, or fatal error must be investigated before
 printing.
