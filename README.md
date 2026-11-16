@@ -30,7 +30,8 @@ printing and approval:
   **Best Paper Award** recorded on the same page;
 - DRDO synopsis appears on page **43**;
 - College Project Expo appears on page **44**, with the **Best Project Award**;
-- KSCST submission page appears on page **45** and is marked TBD (to be done);
+- IEI submission page appears on page **45**; the project has been submitted to
+  The Institution of Engineers (India) and its response is awaited;
 - Appendix A occupies pages **46–48**;
 - Appendix B occupies pages **49–50** and carries the guide, award, and review
   photographs;
@@ -294,14 +295,15 @@ every subsection to display a number, set `secnumdepth` appropriately in
 ### Submission pages after References
 
 The report includes the ICSTIM 2026 abstract submission and paper presentation,
-the DRDO synopsis, the college project expo entry, and a KSCST submission page
+the DRDO synopsis, the college project expo entry, and an IEI submission page
 after References and before Appendix A. These are additional project-submission
 artifacts, not replacements for the VTU report chapters. They are explicitly
 labelled in the Table of Contents and List of Snaps so an evaluator can tell
 where the formal report ends and the supporting submissions begin. The ICSTIM
 page records the presentation on 29 October 2026 and the Best Paper Award; the
-expo page records the Best Project Award; the KSCST page is a placeholder marked
-TBD until that submission is made.
+expo page records the Best Project Award; the IEI page introduces The Institution
+of Engineers (India) and records that the project has been submitted there, with
+the Institution's response awaited.
 
 ### Certificates, signatures and dates
 
@@ -417,7 +419,7 @@ Before printing and signing, confirm each item with the guide and department:
   — list membership and labels.
 - `sections/14_submissions.tex` — inputs the submission pages below;
 - `sections/14a_icstim.tex`, `sections/14b_drdo.tex`, `sections/14c_expo.tex`,
-  and `sections/14d_kscst.tex` — one file per submission page, in contents order.
+  and `sections/14d_iei.tex` — one file per submission page, in contents order.
 - `references.bib` — bibliography records.
 
 When changing the report abstract, rebuild the maintained `front-sheet.pdf` from
