@@ -51,8 +51,7 @@ computer-vision tasks through the same camera interface.
   \centering
   \includegraphics[width=\textwidth]{images/result-modes.png}
   \captionsetup{name=Snap}
-  \caption[Detection, Segmentation, and Pose]{Detection, segmentation, and pose outputs from the
-    demonstrated prototype.}
+  \caption{Detection, Segmentation, and Pose}
   \label{snap:result-modes}
 \end{figure}
 
@@ -66,8 +65,7 @@ of correct detections over a test dataset.
   \centering
   \includegraphics[width=\textwidth]{images/result-tabletop.png}
   \captionsetup{name=Snap}
-  \caption[Landscape Object Detection]{Landscape object-detection output from the demonstrated
-    prototype.}
+  \caption{Landscape Object Detection}
   \label{snap:result-tabletop}
 \end{figure}
 
@@ -82,7 +80,7 @@ output.
   \centering
   \includegraphics[width=\textwidth]{images/result-interior.png}
   \captionsetup{name=Snap}
-  \caption[Indoor Segmentation Output]{Indoor segmentation output from the demonstrated prototype.}
+  \caption{Indoor Segmentation Output}
   \label{snap:result-interior}
 \end{figure}
 
@@ -95,7 +93,7 @@ performance under battlefield conditions.
   \centering
   \includegraphics[width=\textwidth]{images/result-pose.png}
   \captionsetup{name=Snap}
-  \caption[Multi-Person Pose Output]{Multi-person pose output from the demonstrated prototype.}
+  \caption{Multi-Person Pose Output}
 \label{snap:result-pose}\label{end:visual}
 \end{figure}
 
@@ -116,8 +114,8 @@ as more accurate or more suitable for field use.
 The displayed confidence values also illustrate why visual interpretation should accompany numerical
 readings. A high score may make an overlay appear convincing, while a lower score can still be useful
 when the object is visible and the threshold permits it to be displayed. Conversely, a visually
-plausible box can still be a false detection. A controlled assessment would compare these displays with
-ground-truth annotations rather than treating the confidence number as an accuracy percentage.
+plausible box can still be a false detection; only a comparison with ground-truth annotations would
+settle the question.
 
 % Finish the visual evidence before discussing the numerical readings.
 \section{Displayed Runtime Measurements}\label{sec:runtime}
@@ -165,11 +163,9 @@ where time was displayed for those frames, but they do not provide a distributio
 samples. A useful follow-up experiment would collect a fixed number of readings for each task and
 orientation, then report mean, minimum, maximum, and spread using the same device and model.
 
-The current table therefore supports a practical engineering observation: inference is a visible
-contributor to processing time, while the relationship between displayed FPS and component timings
-depends on capture, scheduling, rendering, and averaging behavior. It does not support a claim of
-stable real-time performance under all conditions. That limitation is retained so that future measured
-results can be added without contradicting the present evidence.
+Inference is therefore the visible contributor to processing time, while displayed FPS also depends on
+capture, scheduling, rendering, and averaging behavior. The table does not support a claim of stable
+real-time performance under all conditions.
 
 \subsection{Observation-Based Comparison}
 The six displayed readings can still be compared descriptively when their context is retained. The
@@ -221,11 +217,9 @@ occlusion, changing distance, and orientation transitions. The evaluator should 
 application recovers after permission interruption, a dropped frame, or a temporary model error. These
 observations are part of reliability evidence and should be discussed alongside numerical metrics.
 
-Until this protocol is completed, the current results should be described as a functional demonstration
-with configuration-specific runtime observations. That description is useful because it identifies the
-working capture, inference, mapping, and rendering path while leaving a clear method for the next study.
-It also prevents the displayed confidence value from being mistaken for accuracy and prevents a single
-successful frame from being described as sustained real-time operation.
+Until this protocol is completed, the current results remain a functional demonstration with
+configuration-specific runtime observations: a working capture, inference, mapping, and rendering path,
+with a clear method for the next study.
 
 \section{Discussion and Limitations}\label{sec:discussion}
 The demonstration establishes a functional foundation of live camera input, on-device inference,

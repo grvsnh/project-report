@@ -7,7 +7,27 @@
   % spacing, certificate Viva block, and outcome-page margins are preserved.
   % The report abstract page is maintained separately to satisfy the VTU word
   % limit and to remain consistent with the evidence reported in Chapter 7.
-  \includepdf[pages=1-9,pagecommand={\thispagestyle{empty}}]{front-sheet.pdf}
+  % Each supplied front-sheet page is inserted separately so that it can carry
+  % its own PDF bookmark; the outline then lists the preliminary pages with the
+  % same Roman numbers printed in the index.
+  \includepdf[pages=1,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{TITLE PAGE}{bm:cover}}]{front-sheet.pdf}
+  \includepdf[pages=2,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{CERTIFICATE}{bm:certificate}}]{front-sheet.pdf}
+  \includepdf[pages=3,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{DECLARATION}{bm:declaration}}]{front-sheet.pdf}
+  \includepdf[pages=4,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{ACKNOWLEDGEMENT (i)}{bm:acknowledgement}}]{front-sheet.pdf}
+  \includepdf[pages=5,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{ABSTRACT (ii)}{bm:abstract}}]{front-sheet.pdf}
+  \includepdf[pages=6,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{VISION AND MISSION OF THE INSTITUTE (iii)}{bm:vision-institute}}]{front-sheet.pdf}
+  \includepdf[pages=7,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{VISION AND MISSION OF THE PROGRAM (iv)}{bm:vision-program}}]{front-sheet.pdf}
+  \includepdf[pages=8,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{PROGRAM OUTCOMES (v)}{bm:outcomes}}]{front-sheet.pdf}
+  \includepdf[pages=9,pagecommand={\thispagestyle{empty}%
+    \pdfbookmark[0]{PROGRAM SPECIFIC OUTCOMES (vi)}{bm:specific-outcomes}}]{front-sheet.pdf}
 
   % The supplied front sheet contains the preliminary pages through Roman vi.
   \pagenumbering{roman}
@@ -30,16 +50,17 @@
   \input{chapters/implementation}
   \input{chapters/result}
   \input{chapters/conclusion}
+  % Publication details sit between the conclusion and the references, as in the
+  % department's reference report.
+  \input{sections/14_submissions}
   \clearpage
   \defbibheading{bibintoc}[REFERENCES]{%
-    \section*{#1}\addcontentsline{toc}{chapter}{#1}\label{ch:references}}
+    \phantomsection\PartHeading{#1}\addcontentsline{toc}{chapter}{#1}\label{ch:references}}
   \begingroup
     \emergencystretch=2em
     \printbibliography[heading=bibintoc,title={REFERENCES}]
     \label{end:references}
   \endgroup
-  % Submission material follows the references and precedes the appendices.
-  \input{sections/14_submissions}
   % Appendices follow the references and use alphabetic appendix numbering.
   \appendix
   \renewcommand{\chaptername}{Appendix}

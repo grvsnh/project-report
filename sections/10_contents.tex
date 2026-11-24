@@ -1,4 +1,5 @@
 \begin{frontpage}
+  \pdfbookmark[0]{TABLE OF CONTENTS (vii)}{bm:contents}
   \label{front:contents}
   \FrontLine{contents-index-heading}{\textbf{INDEX}}
   \FrontLine{contents-acknowledgement}{\textbf{ACKNOWLEDGEMENT}}
@@ -19,7 +20,7 @@
   \FrontLine{contents-outcomes-page}{\hfill\textbf{v}\hfill}
   \FrontLine{contents-specific-outcomes-page}{\hfill\textbf{vi}\hfill}
   % The generated contents now occupies three pages and the lists follow it.
-  \FrontLine{contents-table-of-contents-page}{\hfill\textbf{vii--ix}\hfill}
+  \FrontLine{contents-table-of-contents-page}{\hfill\textbf{vii}\hfill}
   \FrontLine{contents-figures-page}{\hfill\textbf{x}\hfill}
   \FrontLine{contents-tables-page}{\hfill\textbf{xi}\hfill}
   \FrontLine{contents-snaps-page}{\hfill\textbf{xii}\hfill}
@@ -38,36 +39,41 @@
   \ContentsRow{sdg}{sec:sdg}{end:sdg}
   \ContentsRow{feasibility}{sec:feasibility}{end:feasibility}
   \ContentsRow{work}{sec:work}{end:work}
+  % Chapter 2 begins in the free space at the foot of this page.  Its entries
+  % flow as one block, so a title that wraps over three lines pushes the next
+  % entry down instead of colliding with it.
+  \ContentsFlowBlock{literature}{%
+    \ContentsFlowChapter{ch:literature}{end:literature}%
+    \ContentsFlowRow{sec:base_paper}{end:base_paper}%
+    \ContentsFlowRow{sec:supplementary_paper_1}{end:supplementary_paper_1}%
+  }%
 \end{frontpage}
 
 \begin{frontpage}
   \label{front:contents-2}
-  \ContentsContinuationLayout
-  \ContentsChapter{literature}{ch:literature}{end:literature}
   % One contents entry per surveyed paper, in the order used by the chapter.
-  \ContentsRowWrap{base_paper}{sec:base_paper}{end:base_paper}
-  \ContentsRowWrap{supplementary_paper_1}{sec:supplementary_paper_1}{end:supplementary_paper_1}
-  \ContentsRowWrap{supplementary_paper_2}{sec:supplementary_paper_2}{end:supplementary_paper_2}
-  \ContentsRowWrap{supplementary_paper_3}{sec:supplementary_paper_3}{end:supplementary_paper_3}
-  \ContentsRowWrap{supplementary_paper_4}{sec:supplementary_paper_4}{end:supplementary_paper_4}
-  \ContentsRowWrap{supplementary_paper_5}{sec:supplementary_paper_5}{end:supplementary_paper_5}
-  \ContentsRowWrap{supplementary_paper_6}{sec:supplementary_paper_6}{end:supplementary_paper_6}
-  \ContentsRowWrap{supplementary_paper_7}{sec:supplementary_paper_7}{end:supplementary_paper_7}
-  \ContentsRowWrap{supplementary_paper_8}{sec:supplementary_paper_8}{end:supplementary_paper_8}
-  \ContentsRowWrap{supplementary_paper_9}{sec:supplementary_paper_9}{end:supplementary_paper_9}
-  \ContentsRowWrap{supplementary_paper_10}{sec:supplementary_paper_10}{end:supplementary_paper_10}
-  \ContentsRow{comparison}{sec:comparison}{end:comparison}
-  \ContentsChapter{requirements}{ch:requirements}{end:requirements}
-  \ContentsRow{functional}{sec:functional}{end:functional}
-  \ContentsRow{nonfunctional}{sec:nonfunctional}{end:nonfunctional}
-  \ContentsRow{hardware}{sec:hardware}{end:hardware}
-  \ContentsRow{software}{sec:software}{end:software}
-  \ContentsRow{acceptance}{sec:acceptance}{end:acceptance}
+  \ContentsFlowBlock{literature-cont}{%
+    \ContentsFlowRow{sec:supplementary_paper_2}{end:supplementary_paper_2}%
+    \ContentsFlowRow{sec:supplementary_paper_3}{end:supplementary_paper_3}%
+    \ContentsFlowRow{sec:supplementary_paper_4}{end:supplementary_paper_4}%
+    \ContentsFlowRow{sec:supplementary_paper_5}{end:supplementary_paper_5}%
+    \ContentsFlowRow{sec:supplementary_paper_6}{end:supplementary_paper_6}%
+    \ContentsFlowRow{sec:supplementary_paper_7}{end:supplementary_paper_7}%
+    \ContentsFlowRow{sec:supplementary_paper_8}{end:supplementary_paper_8}%
+    \ContentsFlowRow{sec:supplementary_paper_9}{end:supplementary_paper_9}%
+    \ContentsFlowRow{sec:supplementary_paper_10}{end:supplementary_paper_10}%
+    \ContentsFlowRow{sec:comparison}{end:comparison}%
+    \ContentsFlowChapter{ch:requirements}{end:requirements}%
+    \ContentsFlowRow{sec:functional}{end:functional}%
+    \ContentsFlowRow{sec:nonfunctional}{end:nonfunctional}%
+    \ContentsFlowRow{sec:hardware}{end:hardware}%
+    \ContentsFlowRow{sec:software}{end:software}%
+    \ContentsFlowRow{sec:acceptance}{end:acceptance}%
+  }%
 \end{frontpage}
 
 \begin{frontpage}
   \label{front:contents-end}
-  \ContentsContinuationLayout
   \ContentsChapter{design}{ch:design}{end:design}
   \ContentsRow{architecture}{sec:architecture}{end:architecture}
   \ContentsRow{workflow}{sec:workflow}{end:workflow}
@@ -86,16 +92,19 @@
   \ContentsRow{runtime}{sec:runtime}{end:runtime}
   \ContentsRow{discussion}{sec:discussion}{end:discussion}
   \ContentsChapter{conclusion}{ch:conclusion}{end:conclusion}
+  \FrontLine{contents-publications}{\textbf{PUBLICATION DETAILS}}
+  \FrontLine{contents-publications-page}{\hfill\textbf{\pageref{publications}}\hfill}
+  \FrontLine{contents-pub-a-number}{A}
+  \FrontLine{contents-pub-a-title}{ICSTIM 2026 Conference Paper}
+  \FrontLine{contents-pub-a-page}{\hfill\textbf{\pageref{submission:icstim}}\hfill}
+  \FrontLine{contents-pub-b-number}{B}
+  \FrontLine{contents-pub-b-title}{DRDO Synopsis Submission}
+  \FrontLine{contents-pub-b-page}{\hfill\textbf{\pageref{submission:drdo}}\hfill}
+  \FrontLine{contents-pub-c-number}{C}
+  \FrontLine{contents-pub-c-title}{College Project Expo}
+  \FrontLine{contents-pub-c-page}{\hfill\textbf{\pageref{submission:expo}}\hfill}
   \FrontLine{contents-references}{\textbf{REFERENCES}}
   \FrontLine{contents-references-page}{\hfill\textbf{\PageRange{ch:references}{end:references}}\hfill}
-  \FrontLine{contents-icstim-abstract}{\textbf{ICSTIM 2026 ABSTRACT SUBMISSION}}
-  \FrontLine{contents-icstim-abstract-page}{\hfill\textbf{\pageref{submission:icstim}}\hfill}
-  \FrontLine{contents-drdo-synopsis}{\textbf{DRDO SYNOPSIS SUBMISSION}}
-  \FrontLine{contents-drdo-synopsis-page}{\hfill\textbf{\pageref{submission:drdo}}\hfill}
-  \FrontLine{contents-expo}{\textbf{COLLEGE PROJECT EXPO}}
-  \FrontLine{contents-expo-page}{\hfill\textbf{\pageref{submission:expo}}\hfill}
-  \FrontLine{contents-iei}{\textbf{IEI PROJECT SUBMISSION}}
-  \FrontLine{contents-iei-page}{\hfill\textbf{\pageref{submission:iei}}\hfill}
   \FrontLine{contents-appendix-a}{\textbf{APPENDIX A}}
   \FrontLine{contents-appendix-a-page}{\hfill\textbf{\PageRange{appendix:a}{appendix:a-end}}\hfill}
   \FrontLine{contents-appendix-b}{\textbf{APPENDIX B}}

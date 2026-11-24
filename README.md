@@ -14,35 +14,37 @@ The current report package is the final checked report version before physical
 printing and approval:
 
 - final PDF: `main.pdf`;
-- total length: **65 pages**;
+- total length: **62 pages**;
 - page size: **A4** (`595.28 × 841.89 pt`);
-- final file size: approximately **9.5 MB**, below the requested 15 MB limit;
+- final file size: approximately **13.0 MB**, below the requested 15 MB limit;
 - every raster image in the report is a PNG;
 - PDF page labels follow the printed folios: the three cover pages are
-  unnumbered, the front matter reads **i–xii**, and the body runs **1–50**, so a
+  unnumbered, the front matter reads **i–xii**, and the body runs **1–47**, so a
   viewer's page box matches the page in hand;
+- the PDF outline carries the same order: the cover, certificate and declaration,
+  every Roman preliminary page titled with its number, then each chapter,
+  `PUBLICATION DETAILS`, `REFERENCES`, `APPENDIX A` and `APPENDIX B`;
 - Chapter 2 — Literature Survey: body pages **6–15**;
 - Chapter 6 — Implementation: body pages **23–30**;
-- Chapter 7 — Result: body pages **31–38**;
-- Conclusion: body page **39**;
-- References: body pages **40–41**;
-- ICSTIM 2026 paper presented on **29 October 2026**, page **42**, with the
-  **Best Paper Award** recorded on the same page;
-- DRDO synopsis appears on page **43**;
-- College Project Expo appears on page **44**, with the **Best Project Award**;
-- IEI submission page appears on page **45**; the project has been submitted to
-  The Institution of Engineers (India) and its response is awaited;
-- Appendix A occupies pages **46–48**;
-- Appendix B occupies pages **49–50** and carries the guide, award, and review
-  photographs;
+- Chapter 7 — Result: body pages **31–37**;
+- Conclusion (Chapter 8): body page **38**;
+- Publication Details occupy pages **39–41**, between the conclusion and the
+  references: **A** ICSTIM 2026 conference paper (page 39, presented on
+  **29 October 2026**, with the **Best Paper Award**), **B** DRDO synopsis
+  (page 40), **C** college project expo (page 41, with the **Best Project Award**
+  and both award certificates on the same page);
+- References: body pages **42–43**;
+- Appendix A occupies pages **44–46**;
+- Appendix B occupies page **47** and carries the guide, award, and review
+  photographs on a single untitled page;
 - the final Table of Contents occupies three pages, labelled **vii–ix**;
 - the final abstract is below the VTU 100-word limit and uses the available
   evidence-aligned 11.9–21.3 FPS wording;
 - the contents entries carry no citation markers, while each of the eleven
   Literature Survey section headings ends with its source marker `[1]`–`[11]`;
-- every contents page number is taken from the label at the end of the section
-  it refers to, so a section that stays on one page shows a single number;
-- the report package is 65 pages and closes with the submission record and the
+- every contents and list entry shows only the page on which the item starts,
+  never a page range;
+- the report package is 62 pages and closes with the publication details and the
   photograph appendix;
 
 The LaTeX build completed successfully with no fatal errors, undefined
@@ -65,7 +67,7 @@ sheet first when any file under `sections/01_...` through `sections/09_...` or
 ```sh
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error front-sheet.tex
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
-python3 tools/set_page_labels.py main.pdf   # viewer page labels i–xii, 1–50
+python3 tools/set_page_labels.py main.pdf   # viewer page labels i–xii, 1–47
 pdfinfo main.pdf                 # page count and A4 check
 pdffonts main.pdf                # embedded-font check
 latexmk -c front-sheet.tex       # remove front-sheet auxiliary files
@@ -73,7 +75,7 @@ latexmk -c main.tex              # remove generated auxiliary files, keep PDF
 ```
 
 The successful build creates `main.pdf` in the repository root. The final
-checked report is 65 A4 pages. `tools/set_page_labels.py` must run after
+checked report is 62 A4 pages. `tools/set_page_labels.py` must run after
 `latexmk`: LaTeX cannot express the unnumbered cover range, so the script
 rewrites the page-label dictionary of the built PDF (expanding only object
 streams, then patching the catalogue at its original byte length) and leaves
@@ -111,6 +113,8 @@ images/icstim-abstract-cropped.png             Cropped raster of the ICSTIM subm
 images/with_guide.png                          Project group with the guide and awards
 images/best_paper.png                          Best Paper Award presentation, ICSTIM 2026
 images/best_project.png                        Best Project Award, college project expo
+images/best_project_chauhan.png                Best Project Award certificate, Gaurav Chauhan
+images/best_project_singh.png                  Best Project Award certificate, Gaurav Singh (rotated upright)
 images/drdo-synopsis-cropped.png               Cropped raster of the DRDO synopsis
 images/review01-upright.png                    Project review photograph 1
 images/review02-upright.png                    Project review photograph 2
@@ -209,7 +213,23 @@ The report includes the VTU-style flow:
 
 The preliminary material uses Roman page labels and the report chapters use
 Arabic page numbers. The generated Table of Contents is kept within three pages
-(labels vii–ix).
+(labels vii–ix); the index on the first of them names the first contents page
+only, as every list entry does. Chapter 2 begins at the foot of the first
+contents page, and its paper titles are set as one flowing block, so a title
+that wraps over three lines pushes the next entry down instead of overlapping
+it. A wrapped paper title continues directly under the first word of that title
+(the hanging indent is the measured width of the section number and its space),
+level with every other wrapped entry in the contents.
+
+### PDF navigation
+
+The PDF carries a bookmark outline that mirrors the printed order and is bound
+to the page labels: the unnumbered cover, certificate and declaration, then each
+Roman preliminary page with its number in the bookmark title (`ACKNOWLEDGEMENT
+(i)` … `LIST OF SNAPS (xii)`), then every chapter and section, `PUBLICATION
+DETAILS`, `REFERENCES`, `APPENDIX A` and `APPENDIX B` with their Arabic pages.
+Clicking a bookmark jumps to that page, and the bookmark destinations are the
+pages the printed index gives for the same item.
 
 ### Chapter content
 
@@ -237,7 +257,9 @@ limitations, and scope for further work expected by the guideline.
   `Table 7.1`.
 - Figure and table entries are maintained in the corresponding generated lists.
 - Prototype screenshots are labelled as `Snap 7.1`–`Snap 7.4` and are also
-  listed in the separate List of Snaps.
+  listed in the separate List of Snaps. The caption text on the page is the same
+  short title as the list entry, and the snapshot label is set in the body
+  weight rather than bold.
 - No mathematical equations are currently used in the report. Therefore the VTU
   SI-unit and right-justified decimal equation-number rule is not triggered. If
   equations are added later, they must use SI units and chapter-wise numbers such
@@ -292,18 +314,20 @@ presentation. This is a deliberate style exception. If the department requires
 every subsection to display a number, set `secnumdepth` appropriately in
 `report.sty` and update the contents layout before printing.
 
-### Submission pages after References
+### Publication Details
 
-The report includes the ICSTIM 2026 abstract submission and paper presentation,
-the DRDO synopsis, the college project expo entry, and an IEI submission page
-after References and before Appendix A. These are additional project-submission
-artifacts, not replacements for the VTU report chapters. They are explicitly
-labelled in the Table of Contents and List of Snaps so an evaluator can tell
-where the formal report ends and the supporting submissions begin. The ICSTIM
-page records the presentation on 29 October 2026 and the Best Paper Award; the
-expo page records the Best Project Award; the IEI page introduces The Institution
-of Engineers (India) and records that the project has been submitted there, with
-the Institution's response awaited.
+The report includes the ICSTIM 2026 conference paper, the DRDO synopsis, and the
+college project expo entry under a single **PUBLICATION DETAILS** heading placed
+after the conclusion and before the References, matching the department's
+reference report. The three entries are lettered **A**, **B** and **C** in the
+Table of Contents instead of continuing the chapter numbers. These are additional
+project-submission artifacts, not replacements for the VTU report chapters.
+
+Every evidence image carries a snapshot number on the page itself — `A-i` for the
+ICSTIM abstract, `B-i` for the DRDO synopsis, and `C-i` for the pair of expo
+certificates on their single page — and the same number and description appear in
+the List of Snaps. The Appendix B photographs carry no titles, captions, or list
+entries; the appendix is a plain page of photographs.
 
 ### Certificates, signatures and dates
 
@@ -335,7 +359,10 @@ approved or signed.
 ### Page count
 
 VTU does not prescribe a 60-page count in the supplied guideline. The report was
-expanded to **65 pages** following the guide's review. The added material is
+expanded to **65 pages** following the guide's review, and later trimmed to
+**62 pages** by combining the two expo certificates onto one page, the
+Appendix B photographs onto one page, and condensing repeated discussion prose
+at the end of the Result chapter. The added material is
 limited to technically relevant implementation, validation, runtime
 interpretation, evaluation protocol, and conclusion detail in Chapters 6, 7, and
 8, plus the eleven-paper Literature Survey in Chapter 2; it does not invent new
@@ -417,16 +444,17 @@ Before printing and signing, confirm each item with the guide and department:
 - `sections/10_contents.tex` — fixed contents placement and generated labels.
 - `sections/11_figures.tex`, `sections/12_tables.tex`, and `sections/13_snaps.tex`
   — list membership and labels.
-- `sections/14_submissions.tex` — inputs the submission pages below;
-- `sections/14a_icstim.tex`, `sections/14b_drdo.tex`, `sections/14c_expo.tex`,
-  and `sections/14d_iei.tex` — one file per submission page, in contents order.
+- `sections/14_submissions.tex` — the PUBLICATION DETAILS heading, with the
+  lettered entries below;
+- `sections/14a_icstim.tex`, `sections/14b_drdo.tex`, and `sections/14c_expo.tex`
+  — the lettered A, B and C publication details, in contents order.
 - `references.bib` — bibliography records.
 
 When changing the report abstract, rebuild the maintained `front-sheet.pdf` from
 the front-matter source before rebuilding `main.pdf`, because `main.tex` imports
 that PDF as the institutional front matter. The ICSTIM and DRDO source PDFs are
 converted to cropped PNG evidence images in `images/` so that their content is
-larger and clearer on the final submission pages.
+larger and clearer on the final publication pages.
 
 ## Final verification commands
 
@@ -441,7 +469,7 @@ git diff --check
 latexmk -c main.tex
 ```
 
-The expected final PDF check is 65 pages with an A4 page size. Build warnings
+The expected final PDF check is 62 pages with an A4 page size. Build warnings
 about underfull boxes in long prose or tables are not fatal; any overfull box,
 undefined reference, missing font, or fatal error must be investigated before
 printing.
