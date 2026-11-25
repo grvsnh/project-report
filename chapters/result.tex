@@ -1,15 +1,14 @@
 \chapter{RESULT}\label{ch:result}
 
 \section{Demonstration Setup}\label{sec:demonstration}
-The results in this chapter are based on the demonstrated Android prototype. The available
-evidence consists of application screenshots in indoor settings, showing everyday objects and
-groups of people. The screenshots display a confidence threshold of 0.25 and an IoU threshold of
-0.70, together with task controls and runtime readings.
+The results in this chapter are based on the demonstrated Android prototype, using application
+screenshots in indoor settings that show everyday objects and groups of people, with a confidence
+threshold of 0.25, an IoU threshold of 0.70, task controls, and runtime readings.
 
 These exhibits document the prototype's visible behavior. The available material does not identify
 the device model, annotated test-set size, model input resolution, execution backend, or timing
-sample duration. Consequently, the reported values are transcriptions of displayed readings, and
-the visual demonstrations are not presented as a controlled accuracy benchmark.
+sample duration, so the reported values are transcriptions of displayed readings and the visual
+demonstrations are not a controlled accuracy benchmark.
 
 \subsection{Observed Configuration and Evaluation Boundary}
 The camera preview, selected task mode, confidence and IoU thresholds, overlay type, and displayed
@@ -131,88 +130,59 @@ The landscape segmentation screenshot decomposes its 41.3 ms reading into 5.1 ms
 25.2 ms, and 2.5 ms, totaling 37.9 ms. In both snapshots, inference is the largest displayed
 component, making model execution an important target for further profiling.
 
-The displayed FPS is not simply the reciprocal of the processing-time field. For instance, 37.9 ms
-corresponds to approximately 26.4 processing cycles per second, whereas the screenshot reports
-21.3 FPS. Capture, scheduling, rendering, and the application's averaging conventions can affect
-the relationship between these indicators. The timing windows are not defined, so the
+The displayed FPS is not simply the reciprocal of the processing-time field: 37.9 ms corresponds to
+about 26.4 cycles per second, whereas the screenshot reports 21.3 FPS, because capture, scheduling,
+rendering, and averaging conventions intervene. The timing windows are undefined, so the
 processing-time field is not claimed to measure end-to-end camera-to-display latency.
 
-The six readings are configuration-specific observations: the 11.9 FPS and 62.9 ms of portrait
-segmentation is not comparable with the 21.3 FPS and 37.9 ms of landscape group pose because task,
-scene, orientation, and processing path differ, and the component times identify where time was
-displayed for those frames rather than a distribution over repeated samples. Inference is the visible
-contributor to processing time, while displayed FPS also depends on capture, scheduling, rendering,
-and averaging, so the table does not support a claim of stable real-time performance under all
-conditions.
+Inference is the visible contributor to processing time, and the table does not support a claim of
+stable real-time performance.
 
 \subsection{Observation-Based Comparison}
-The six displayed readings can still be compared descriptively when their context is retained. The
-portrait segmentation exhibit has the lowest displayed FPS and the largest displayed processing time
-in the table. This is consistent with segmentation presenting a denser output than a simple detection
-box, but the available evidence does not isolate the task from the scene, device state, or application
-averaging. It is therefore an observation about the supplied configuration, not a measured general
-property of every segmentation run.
+The six displayed readings can be compared descriptively while their context is retained. Portrait
+segmentation has the lowest displayed FPS and the largest processing time, consistent with a denser
+output than a detection box, but the evidence does not isolate the task from the scene or averaging,
+so this describes the supplied configuration rather than every segmentation run.
 
-The landscape group-pose exhibit has the highest displayed FPS among the six readings, while the
-portrait group-pose exhibit reports a lower displayed FPS. The difference shows why orientation should
-be recorded, but it does not prove that landscape processing is intrinsically faster. The scenes may
-contain different numbers of visible people, the preview dimensions may differ, and the timing field may
-use a rolling or task-specific calculation. A controlled comparison would hold the device, scene,
-model, resolution, and number of samples constant while changing only the orientation.
+Landscape group pose has the highest displayed FPS while portrait group pose is lower. That shows why
+orientation should be recorded, not that landscape processing is faster, since the scenes and timing
+window differ; a controlled comparison would change only orientation.
 
-The visual exhibits provide a second form of comparison. Detection outputs are comparatively sparse
-and easy to inspect, segmentation outputs cover regions of the image, and pose outputs add several
-keypoints and connecting lines. As visual complexity increases, readability and overlay placement become
-important interface concerns even when the underlying model call is unchanged. The screenshots support
-this interface-level comparison, but they do not establish which task is more accurate or more suitable
-for deployment.
+Detection outputs are sparse and easy to inspect, segmentation covers regions of the image, and pose
+adds keypoints and connecting lines, so readability and overlay placement matter as complexity rises.
 
 \label{end:runtime}
 \subsection{Recommended Evaluation Protocol}
 The next evaluation should begin with a documented test set covering the intended operating
 conditions: object classes, image sources, scene conditions, distance and scale ranges, lighting
-variation, occlusion cases, and the annotation procedure, with the test split kept separate from any
-training data and any combat-specific classes and annotation policy stated before scores are computed.
+variation, occlusion, and the annotation procedure, with the test split separate from training data.
 
 For accuracy, predictions should be matched against annotations under a declared IoU rule and one
 confidence-processing policy across runs, with precision, recall, and mAP reported alongside the
-dataset size and split rather than as a single percentage. Pose and segmentation require their own
-task-specific metrics, and false positives and missed detections should be reported because an
-aggregate can hide failures on small, distant, or partially occluded objects.
+dataset size and split, plus task-specific metrics for pose and segmentation.
 
-For performance, the device model, Android version, build, model export, input resolution, execution
-delegate, battery condition, and thermal state should be recorded, with each task and orientation run
-through a warm-up period followed by a fixed measurement interval and the samples reported with mean
-and spread. Camera-to-display latency should be measured separately from model processing time, and
-power and thermal figures should come from a documented instrument or system method.
+For performance, the device model, Android version, build, input resolution, execution delegate, and
+thermal state should be recorded, with each task and orientation run through a warm-up period and a
+fixed measurement interval.
 
-The procedure should include normal and adverse conditions: stable overlays and predictable controls on
-one side, motion, glare, low light, clutter, occlusion, changing distance, and orientation transitions
-on the other, recording whether the application recovers after a permission interruption, a dropped
-frame, or a temporary model error. Until this protocol is completed, the current results remain a
-functional demonstration with configuration-specific runtime observations: a working capture,
-inference, mapping, and rendering path, with a clear method for the next study.
+The procedure should also cover adverse conditions, from motion and glare to low light, clutter,
+occlusion, and orientation transitions, noting whether the application recovers after a dropped frame.
 
 \section{Discussion and Limitations}\label{sec:discussion}
 The demonstration establishes a functional foundation of live camera input, on-device inference,
-task-specific visualization, configurable thresholds, and displayed runtime information, supporting
-continued development of a portable situational-awareness application; however, its classes are
-predominantly ordinary objects and people, not a validated combat-specific threat vocabulary.
+task-specific visualization, configurable thresholds, and runtime information, but its classes are
+ordinary objects and people rather than a validated combat-specific vocabulary.
 
-Quantitative accuracy evaluation requires an annotated dataset and defined test split; precision, recall,
-and mAP are not reported because the available material lacks those measurements. Sustained FPS,
-latency distributions, power consumption, and thermal behavior likewise require repeated runs on a
-documented device, and literature-review results belong to those studies, not to VeerDrishti.
+Precision, recall, and mAP are not reported because the available material lacks an annotated dataset
+and test split; sustained FPS, latency spread, power, and thermal behavior likewise need repeated runs
+on a documented device.
 
-The results can consequently be organized into three evidence levels. Directly observed evidence
-includes camera preview operation, object overlays, segmentation regions, pose keypoints, threshold
-controls, and displayed runtime fields; implementation-supported behavior is the documented capture,
-rotation, preprocessing, inference, and rendering sequence; and claims still requiring new evidence are
-combat-specific recognition, accuracy against annotated data, sustained performance, power and thermal
-behavior, tracking consistency, and operational reliability. The classification keeps a prototype
-screenshot from being presented as a field evaluation.
+The results fall into three evidence levels: directly observed evidence covers preview operation,
+overlays, segmentation regions, pose keypoints, threshold controls, and displayed runtime fields;
+implementation-supported behavior is the documented capture, rotation, preprocessing, inference, and
+rendering sequence; and claims still needing new evidence are combat-specific recognition, accuracy
+against annotated data, sustained performance, and operational reliability.
 
-Further evaluation should cover small or distant objects, occlusion, camera motion, illumination changes,
-false or missed detections, and overlay alignment, while combat-specific fine-tuning, thermal fusion,
-open-vocabulary recognition, and persistent event storage remain future work.
+Further evaluation should cover small or distant objects, occlusion, camera motion, illumination, and
+overlay alignment; combat fine-tuning, fusion, and persistent storage remain future work.
 \label{end:discussion}\label{end:result}

@@ -14,28 +14,28 @@ The current report package is the final checked report version before physical
 printing and approval:
 
 - final PDF: `main.pdf`;
-- total length: **65 pages**;
+- total length: **62 pages**;
 - page size: **A4** (`595.28 × 841.89 pt`);
 - final file size: approximately **13.0 MB**, below the requested 15 MB limit;
 - every raster image in the report is a PNG;
 - PDF page labels follow the printed folios: the three cover pages are
-  unnumbered, the front matter reads **i–xii**, and the body runs **1–50**, so a
+  unnumbered, the front matter reads **i–xii**, and the body runs **1–47**, so a
   viewer's page box matches the page in hand;
 - the PDF outline carries the same order: the cover, certificate and declaration,
   every Roman preliminary page titled with its number, then each chapter,
   `PUBLICATION DETAILS`, `REFERENCES`, `APPENDIX A` and `APPENDIX B`;
 - Chapter 2 — Literature Survey: body pages **7–18**;
-- Chapter 6 — Implementation: body pages **26–32**;
-- Chapter 7 — Result: body pages **33–39**;
-- Conclusion (Chapter 8): body page **40**;
-- Publication Details occupy pages **41–43**, between the conclusion and the
-  references: **A** ICSTIM 2026 conference paper (page 41, presented on
+- Chapter 6 — Implementation: body pages **26–31**;
+- Chapter 7 — Result: body pages **32–37**;
+- Conclusion (Chapter 8): body page **38**;
+- Publication Details occupy pages **39–41**, between the conclusion and the
+  references: **A** ICSTIM 2026 conference paper (page 39, presented on
   **29 October 2026**, with the **Best Paper Award**), **B** DRDO synopsis
-  (page 42), **C** college project expo (page 43, with the **Best Project Award**
+  (page 40), **C** college project expo (page 41, with the **Best Project Award**
   and both award certificates on the same page);
-- References: body pages **44–45**;
-- Appendix A occupies pages **46–49**;
-- Appendix B occupies page **50** and carries the guide, award, and review
+- References: body pages **42–43**;
+- Appendix A occupies pages **44–46**;
+- Appendix B occupies page **47** and carries the guide, award, and review
   photographs on a single untitled page;
 - the final Table of Contents occupies three pages, labelled **vii–ix**;
 - the final abstract is below the VTU 100-word limit and uses the available
@@ -44,7 +44,7 @@ printing and approval:
   Literature Survey section headings ends with its source marker `[1]`–`[11]`;
 - every contents and list entry shows only the page on which the item starts,
   never a page range;
-- the report package is 65 pages and closes with the publication details and the
+- the report package is 62 pages and closes with the publication details and the
   photograph appendix;
 
 The LaTeX build completed successfully with no fatal errors, undefined
@@ -67,7 +67,7 @@ sheet first when any file under `sections/01_...` through `sections/09_...` or
 ```sh
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error front-sheet.tex
 latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
-python3 tools/set_page_labels.py main.pdf   # viewer page labels i–xii, 1–50
+python3 tools/set_page_labels.py main.pdf   # viewer page labels i–xii, 1–47
 pdfinfo main.pdf                 # page count and A4 check
 pdffonts main.pdf                # embedded-font check
 latexmk -c front-sheet.tex       # remove front-sheet auxiliary files
@@ -75,7 +75,7 @@ latexmk -c main.tex              # remove generated auxiliary files, keep PDF
 ```
 
 The successful build creates `main.pdf` in the repository root. The final
-checked report is 65 A4 pages. `tools/set_page_labels.py` must run after
+checked report is 62 A4 pages. `tools/set_page_labels.py` must run after
 `latexmk`: LaTeX cannot express the unnumbered cover range, so the script
 rewrites the page-label dictionary of the built PDF (expanding only object
 streams, then patching the catalogue at its original byte length) and leaves
@@ -346,8 +346,9 @@ approved or signed.
 ### Appendices and software deliverables
 
 - **Appendix A** contains a representative source-code listing relevant to the
-  Android/YOLO integration and camera rotation path. It is not a substitute for
-  handing over the complete application source.
+  Android/YOLO integration and camera rotation path, set as three unlabelled
+  pages of 6.5 pt code. It is not a substitute for handing over the complete
+  application source.
 - **Appendix B** contains the project photographs: the group with the guide
   holding the Best Project award certificates and rolling shield, the Best Paper
   Award presentation at ICSTIM 2026, the Best Project Award at the college
@@ -368,9 +369,9 @@ expanded to **65 pages** following the guide's review, then trimmed to 62 pages
 by combining the two expo certificates onto one page, the Appendix B photographs
 onto one page, and condensing repeated discussion prose at the end of the Result
 chapter. Adopting the department reference's 20.7 pt line spacing in place of
-LaTeX's 18 pt loosened the text again, so Chapter 6 and the closing paragraphs of
-Chapter 7 were condensed once more to hold the package at **65 pages**. The added
-material is
+LaTeX's 18 pt loosened the text again, so Chapter 6 and Chapter 7 were each
+condensed by a page and the Appendix A listing tightened to three pages, holding
+the package at **62 pages**. The added material is
 limited to technically relevant implementation, validation, runtime
 interpretation, evaluation protocol, and conclusion detail in Chapters 6, 7, and
 8, plus the eleven-paper Literature Survey in Chapter 2; it does not invent new
@@ -477,7 +478,7 @@ git diff --check
 latexmk -c main.tex
 ```
 
-The expected final PDF check is 65 pages with an A4 page size. Build warnings
+The expected final PDF check is 62 pages with an A4 page size. Build warnings
 about underfull boxes in long prose or tables are not fatal; any overfull box,
 undefined reference, missing font, or fatal error must be investigated before
 printing.

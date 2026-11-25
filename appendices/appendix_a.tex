@@ -3,9 +3,6 @@
 \pdfbookmark[0]{APPENDIX A}{bm:appendix-a}
 \label{appendix:a}
 
-\begin{center}
-  \textbf{SOURCE CODE LISTING (1/3)}
-\end{center}
 \begingroup
 \fontsize{6.5pt}{6.8pt}\selectfont
 \begin{verbatim}
@@ -77,11 +74,8 @@ class YOLO(
 \endgroup
 
 \clearpage
-\begin{center}
-  \textbf{SOURCE CODE LISTING (2/3)}
-\end{center}
 \begingroup
-\fontsize{6.5pt}{6.8pt}\selectfont
+\fontsize{6.5pt}{6.45pt}\selectfont
 \begin{verbatim}
     private fun calculateSmartLabelRect(
         box: RectF, labelWidth: Float, labelHeight: Float,
@@ -95,11 +89,9 @@ class YOLO(
         if (bottom > viewHeight) { bottom = viewHeight; top = bottom - labelHeight }
         return RectF(left, top, right, bottom)
     }
-
     private fun drawAnnotations(bitmap: Bitmap, result: YOLOResult,
         rotateForCamera: Boolean = true, rotationDegrees: Int? = null): Bitmap {
-        val degrees = rotationDegrees ?: 90
-        val rotated = degrees % 180 != 0
+        val degrees = rotationDegrees ?: 90; val rotated = degrees % 180 != 0
         val output = if (rotateForCamera) Bitmap.createBitmap(
             if (rotated) bitmap.height else bitmap.width,
             if (rotated) bitmap.width else bitmap.height, Bitmap.Config.ARGB_8888
@@ -115,7 +107,6 @@ class YOLO(
         val sy = output.height / result.origShape.height.toFloat()
         fun scale(box: RectF) = RectF(box.left * sx, box.top * sy,
             box.right * sx, box.bottom * sy)
-
         when (task) {
             YOLOTask.DETECT, YOLOTask.SEGMENT, YOLOTask.POSE -> {
                 result.boxes.forEach { box ->
@@ -128,11 +119,10 @@ class YOLO(
                         output.width.toFloat(), output.height.toFloat())
                     paint.style = Paint.Style.FILL
                     canvas.drawRoundRect(label, 12f, 12f, paint)
-                    paint.color = Color.WHITE; canvas.drawText(text,
-                        label.left + 8f, label.bottom - 8f, paint)
+                    paint.color = Color.WHITE
+                    canvas.drawText(text, label.left + 8f, label.bottom - 8f, paint)
                     paint.style = Paint.Style.STROKE
                 }
-                // Full implementation also draws masks, keypoints, and skeletons.
             }
             YOLOTask.SEMANTIC, YOLOTask.DEPTH -> {
                 result.semanticMask?.let { drawMask(canvas, it, output) }
@@ -143,7 +133,6 @@ class YOLO(
         }
         return output
     }
-
     @Synchronized fun setConfidenceThreshold(value: Double) =
         predictor.setConfidenceThreshold(value)
     @Synchronized fun setIouThreshold(value: Double) = predictor.setIouThreshold(value)
@@ -161,9 +150,6 @@ class YOLO(
 \endgroup
 
 \clearpage
-\begin{center}
-  \textbf{SOURCE CODE LISTING (3/3)}
-\end{center}
 \begingroup
 \fontsize{6.5pt}{6.8pt}\selectfont
 \begin{verbatim}
