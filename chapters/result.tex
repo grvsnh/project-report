@@ -12,30 +12,18 @@ sample duration. Consequently, the reported values are transcriptions of display
 the visual demonstrations are not presented as a controlled accuracy benchmark.
 
 \subsection{Observed Configuration and Evaluation Boundary}
-The visible prototype configuration provides a useful functional baseline for interpreting the
-remaining results. The camera preview, selected task mode, confidence threshold, IoU threshold,
-overlay type, and displayed runtime fields form the minimum context needed to understand each
-demonstration. Recording these values with every future run will make comparisons between scenes
-more reliable and will distinguish a change in model behavior from a change in interface settings.
+The camera preview, selected task mode, confidence and IoU thresholds, overlay type, and displayed
+runtime fields form the minimum context needed to understand each demonstration, and recording them
+with every run separates a change in model behavior from a change in interface settings.
 
-The current evidence also separates what can be observed directly from what still requires testing.
-An overlay confirms that a frame passed through capture, inference, coordinate mapping, and display;
-it does not confirm class accuracy, stable tracking, or suitability for operational deployment. A
-proper evaluation should therefore pair the screenshots with the device configuration, model file,
-input resolution, dataset split, repeated timing samples, and clearly defined success criteria.
-
-The demonstrations also provide a useful separation between interface evidence and model evidence.
-The presence of a live preview and an overlay confirms that the camera, inference call, coordinate
-mapping, and rendering path were connected for that frame. The class name and confidence value show
-what the deployed model displayed, but they do not prove that the class was correct. Similarly, a
-smooth-looking preview suggests that the application remained responsive during the capture, but it
-does not establish a sustained frame rate over a long run.
-
-This distinction is important for interpreting the chapter responsibly. The result is a record of
-what the prototype visibly produced under the available demonstration conditions. It is not a claim
-that the system has already been trained on a combat dataset, validated against field imagery, or
-qualified for operational deployment. The evidence is still useful because it identifies the working
-capture-to-display path and makes the next evaluation steps concrete.
+The evidence also separates interface from model evidence. A live preview with an overlay confirms
+that capture, inference, coordinate mapping, and rendering were connected for that frame, and the
+class name and confidence value show what the model displayed, but neither proves the class correct;
+a smooth preview suggests responsiveness during the capture without establishing a sustained frame
+rate. The result is therefore a record of what the prototype visibly produced under the available
+demonstration conditions, not a claim that it has been trained on a combat dataset, validated
+against field imagery, or qualified for operational deployment. It remains useful because it
+identifies the working capture-to-display path and makes the next evaluation steps concrete.
 
 \label{end:demonstration}
 \section{Visual Output}\label{sec:visual}
@@ -98,24 +86,18 @@ performance under battlefield conditions.
 \end{figure}
 
 \subsection{Cross-Orientation and Task Comparison}
-The visual exhibits cover both portrait and landscape presentation. Portrait scenes make the vertical
-camera workflow and the stacking of interface controls easy to inspect, while landscape scenes show
-how the same output path behaves when the available horizontal space changes. The comparison is
-particularly relevant for a wearable or helmet-mounted concept, where the camera orientation may
-change as the operator moves or changes the viewing posture.
+The exhibits cover both orientations: portrait scenes make the vertical camera workflow and the
+stacked controls easy to inspect, while landscape scenes show the same output path when the available
+horizontal space changes. This matters for a wearable or helmet-mounted concept, where orientation
+changes as the operator moves.
 
-Detection mode provides the clearest first check because the output is represented by boxes, labels,
-and confidence values. Segmentation mode adds a denser visual layer and therefore tests whether masks
-remain aligned without obscuring the scene. Pose mode adds keypoints and connections, making it useful
-for checking multi-person rendering and partial occlusion. Across the exhibits, the prototype shows
-that these modes can be presented through the same interface, but the screenshots do not rank one mode
-as more accurate or more suitable for field use.
-
-The displayed confidence values also illustrate why visual interpretation should accompany numerical
-readings. A high score may make an overlay appear convincing, while a lower score can still be useful
-when the object is visible and the threshold permits it to be displayed. Conversely, a visually
-plausible box can still be a false detection; only a comparison with ground-truth annotations would
-settle the question.
+Detection mode is the clearest first check, since its output is boxes, labels, and confidence values.
+Segmentation adds a denser visual layer and tests whether masks stay aligned without obscuring the
+scene, and pose adds keypoints and connections for multi-person rendering and partial occlusion.
+The prototype presents all three through one interface, but the screenshots do not rank them by
+accuracy or field suitability. The displayed scores also show why visual interpretation must
+accompany numerical readings: a high score can make an overlay convincing while a lower score can
+still be useful, and a plausible box can still be a false detection until compared with ground truth.
 
 % Finish the visual evidence before discussing the numerical readings.
 \section{Displayed Runtime Measurements}\label{sec:runtime}
@@ -155,17 +137,13 @@ corresponds to approximately 26.4 processing cycles per second, whereas the scre
 the relationship between these indicators. The timing windows are not defined, so the
 processing-time field is not claimed to measure end-to-end camera-to-display latency.
 
-The six readings are best interpreted as configuration-specific observations. The portrait
-segmentation reading of 11.9 FPS and 62.9 ms is not directly comparable to the landscape group-pose
-reading of 21.3 FPS and 37.9 ms because the task, scene, orientation, and processing path differ.
-Likewise, the preprocessing, inference, and post-processing components shown in the exhibits identify
-where time was displayed for those frames, but they do not provide a distribution across repeated
-samples. A useful follow-up experiment would collect a fixed number of readings for each task and
-orientation, then report mean, minimum, maximum, and spread using the same device and model.
-
-Inference is therefore the visible contributor to processing time, while displayed FPS also depends on
-capture, scheduling, rendering, and averaging behavior. The table does not support a claim of stable
-real-time performance under all conditions.
+The six readings are configuration-specific observations: the 11.9 FPS and 62.9 ms of portrait
+segmentation is not comparable with the 21.3 FPS and 37.9 ms of landscape group pose because task,
+scene, orientation, and processing path differ, and the component times identify where time was
+displayed for those frames rather than a distribution over repeated samples. Inference is the visible
+contributor to processing time, while displayed FPS also depends on capture, scheduling, rendering,
+and averaging, so the table does not support a claim of stable real-time performance under all
+conditions.
 
 \subsection{Observation-Based Comparison}
 The six displayed readings can still be compared descriptively when their context is retained. The
@@ -191,35 +169,29 @@ for deployment.
 
 \label{end:runtime}
 \subsection{Recommended Evaluation Protocol}
-The next evaluation should begin with a documented test set that represents the intended operating
-conditions. It should identify the object classes, image sources, scene conditions, distance and scale
-ranges, lighting variation, occlusion cases, and the annotation procedure. A fixed test split must be
-kept separate from any training or fine-tuning data. If the project later introduces combat-specific
-classes, the class definitions and annotation policy should be stated before scores are calculated.
+The next evaluation should begin with a documented test set covering the intended operating
+conditions: object classes, image sources, scene conditions, distance and scale ranges, lighting
+variation, occlusion cases, and the annotation procedure, with the test split kept separate from any
+training data and any combat-specific classes and annotation policy stated before scores are computed.
 
-For accuracy, predictions should be matched against the annotations using a declared IoU rule and the
-same confidence-processing policy across runs. Precision, recall, and mAP should then be reported with
-the dataset size and split, rather than as a single unexplained percentage. For pose or segmentation,
-the appropriate task-specific metrics should be selected instead of reusing an object-detection score.
-The report should also identify false positives and missed detections because a high-level aggregate can
-hide failures on small, distant, or partially occluded objects.
+For accuracy, predictions should be matched against annotations under a declared IoU rule and one
+confidence-processing policy across runs, with precision, recall, and mAP reported alongside the
+dataset size and split rather than as a single percentage. Pose and segmentation require their own
+task-specific metrics, and false positives and missed detections should be reported because an
+aggregate can hide failures on small, distant, or partially occluded objects.
 
 For performance, the device model, Android version, build, model export, input resolution, execution
-delegate, battery condition, and thermal state should be recorded. Each task and orientation should be
-run for a warm-up period followed by a fixed measurement interval. The resulting samples should be
-reported with a mean and spread, together with minimum and maximum values when useful. Camera-to-display
-latency should be measured separately from model processing time if the system is intended for responsive
-operator feedback. Power and thermal measurements should use a documented instrument or system method.
+delegate, battery condition, and thermal state should be recorded, with each task and orientation run
+through a warm-up period followed by a fixed measurement interval and the samples reported with mean
+and spread. Camera-to-display latency should be measured separately from model processing time, and
+power and thermal figures should come from a documented instrument or system method.
 
-The test procedure should include both normal and adverse conditions. Normal cases can verify stable
-overlays and predictable controls, while adverse cases can cover motion, glare, low light, clutter,
-occlusion, changing distance, and orientation transitions. The evaluator should record whether the
-application recovers after permission interruption, a dropped frame, or a temporary model error. These
-observations are part of reliability evidence and should be discussed alongside numerical metrics.
-
-Until this protocol is completed, the current results remain a functional demonstration with
-configuration-specific runtime observations: a working capture, inference, mapping, and rendering path,
-with a clear method for the next study.
+The procedure should include normal and adverse conditions: stable overlays and predictable controls on
+one side, motion, glare, low light, clutter, occlusion, changing distance, and orientation transitions
+on the other, recording whether the application recovers after a permission interruption, a dropped
+frame, or a temporary model error. Until this protocol is completed, the current results remain a
+functional demonstration with configuration-specific runtime observations: a working capture,
+inference, mapping, and rendering path, with a clear method for the next study.
 
 \section{Discussion and Limitations}\label{sec:discussion}
 The demonstration establishes a functional foundation of live camera input, on-device inference,
@@ -230,19 +202,17 @@ predominantly ordinary objects and people, not a validated combat-specific threa
 Quantitative accuracy evaluation requires an annotated dataset and defined test split; precision, recall,
 and mAP are not reported because the available material lacks those measurements. Sustained FPS,
 latency distributions, power consumption, and thermal behavior likewise require repeated runs on a
-documented device. Literature-review results belong to those studies, not to VeerDrishti.
+documented device, and literature-review results belong to those studies, not to VeerDrishti.
 
 The results can consequently be organized into three evidence levels. Directly observed evidence
 includes camera preview operation, object overlays, segmentation regions, pose keypoints, threshold
-controls, and displayed runtime fields. Implementation-supported behavior includes the documented
-capture, rotation, preprocessing, inference, and rendering sequence. Claims that still require new
-evidence include combat-specific recognition, accuracy against annotated data, sustained performance,
-power and thermal behavior, tracking consistency, and operational reliability. This classification
-keeps the discussion useful while preventing a prototype screenshot from being presented as a complete
-field evaluation.
+controls, and displayed runtime fields; implementation-supported behavior is the documented capture,
+rotation, preprocessing, inference, and rendering sequence; and claims still requiring new evidence are
+combat-specific recognition, accuracy against annotated data, sustained performance, power and thermal
+behavior, tracking consistency, and operational reliability. The classification keeps a prototype
+screenshot from being presented as a field evaluation.
 
 Further evaluation should cover small or distant objects, occlusion, camera motion, illumination changes,
-false or missed detections, and overlay alignment. Combat-specific fine-tuning, thermal fusion,
-open-vocabulary recognition, and persistent event storage remain future work requiring separate
-implementation, evaluation, and controlled robustness testing.
+false or missed detections, and overlay alignment, while combat-specific fine-tuning, thermal fusion,
+open-vocabulary recognition, and persistent event storage remain future work.
 \label{end:discussion}\label{end:result}

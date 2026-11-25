@@ -3,109 +3,87 @@
 
 \section{Prototype Overview}\label{sec:prototype}
 VeerDrishti is implemented as an Android application that combines a live camera feed with
-on-device computer-vision inference. The implementation uses Android CameraX for video capture,
-Ultralytics YOLO26 Nano and its variants for inference, Flutter for the interface, and Android
-Logcat for development diagnostics. The prototype brings these components together to display
-detections directly over the camera view.
+on-device computer-vision inference. It uses Android CameraX for capture, Ultralytics YOLO26 Nano
+and its variants for inference, Flutter for the interface, and Android Logcat for diagnostics. The
+prototype joins these parts so that detections appear directly over the camera view.
 
-The implementation focuses on the capture--inference--visualization loop. The prototype demonstrates
-ordinary object detection, segmentation overlays, and human pose visualization. The longer-term
-combat-vision objective guides the application, but thermal fusion, open-vocabulary recognition,
-combat-specific fine-tuning, and persistent mission recording are separate extensions whose
-completion is not established by the current prototype evidence.
+The implemented scope is the capture--inference--visualization loop, demonstrating object detection,
+segmentation overlays, and human pose visualization. The combat-vision objective guides the
+application, but thermal fusion, open-vocabulary recognition, combat-specific fine-tuning, and
+persistent mission recording are extensions that the current prototype does not establish.
 
 \label{end:prototype}
 \section{Module Implementation}\label{sec:modules}
 
 \subsection{Input Module}
-Android CameraX provides the live camera input. The application exposes the camera view through
-the Flutter interface so that users can observe the scene and its associated overlays together.
-The portrait and landscape screenshots demonstrate operation in both orientations. Camera access
-requires Android camera permission; denial or interruption must be handled before attempting to
-run the inference pipeline.
+Android CameraX supplies the live camera input, exposed through the Flutter interface so that the
+scene and its overlays are observed together. The portrait and landscape screenshots demonstrate
+both orientations. Camera access requires the Android camera permission, and denial or interruption
+must be handled before the inference pipeline runs.
 
 \subsection{Preprocessing Module}
-Preprocessing is handled by the native YOLO inference pipeline. This stage includes frame rotation,
-resizing or letterboxing, RGB conversion, and input tensor
-preparation. Rotation keeps the analyzed image consistent with device orientation. Resizing and
-letterboxing adapt the camera frame to the model input while preserving the information needed
-to align output coordinates with the preview. The exact input resolution and normalization
-settings depend on the deployed model configuration and should be recorded for reproducibility.
+Preprocessing is handled by the native YOLO inference pipeline: frame rotation, resizing or
+letterboxing, RGB conversion, and input-tensor preparation. Rotation keeps the analysed image
+consistent with the device orientation, while resizing and letterboxing adapt the frame to the model
+input and preserve the information needed to align output coordinates with the preview. The exact
+input resolution and normalization settings depend on the deployed model configuration.
 
 \subsection{Orientation and Coordinate Handling}
-Camera frames and displayed previews do not always share the same width, height, or orientation.
-The implementation therefore treats orientation as part of the input-processing contract rather than
-as a cosmetic display option. A portrait frame may arrive from the camera with rotation metadata,
-while the preview is rendered after the interface has already applied its own layout transformation.
-If these transformations are ignored, a detection can be correct in model coordinates but appear
-shifted, mirrored, or rotated in the user interface.
+Camera frames and displayed previews need not share width, height, or orientation, so orientation is
+treated as part of the input contract rather than a cosmetic option. A portrait frame may arrive with
+rotation metadata while the preview has already applied its own layout transformation; if these are
+ignored, a detection can be correct in model coordinates yet appear shifted, mirrored, or rotated.
 
-The processing sequence first reads the camera rotation information, then prepares the frame for the
-selected task. After inference, the output coordinates are mapped back to the preview dimensions.
-The same principle applies to segmentation masks and pose keypoints: the transformation must be
-consistent for the image, the bounding geometry, and the visual overlay. This is why the portrait and
-landscape demonstrations are useful integration evidence even though they are not accuracy tests.
-
-The current implementation material also indicates that camera-feed rotation is applied consistently
-when frames are passed through the inference path. A production evaluation should still record the
-rotation metadata, preview dimensions, crop or letterbox policy, and zoom state for every run. These
-details make it possible to distinguish an inference problem from a coordinate-mapping problem when
-an overlay appears misaligned.
+The sequence reads the camera rotation, prepares the frame for the selected task, and maps the output
+coordinates back to the preview dimensions after inference. The same transformation must hold for the
+image, the segmentation masks, and the pose keypoints, which is why the portrait and landscape
+demonstrations are useful integration evidence even though they are not accuracy tests. A production
+evaluation should record rotation metadata, preview dimensions, crop or letterbox policy, and zoom
+state for every run, so that an inference fault can be told apart from a coordinate-mapping fault.
 
 \subsection{Inference Module}
-YOLO26 Nano and its task variants form the inference component. Computation takes
-place on the device, supporting a prototype that does not require a remote server for each frame.
-The interface exposes Det, Seg, and Pose modes, corresponding to detection, segmentation, and pose
-outputs. The precise model export format, class configuration, and hardware execution delegate
-must be taken from the application configuration when documenting a reproducible deployment.
+YOLO26 Nano and its task variants form the inference component and run on the device, so the
+prototype needs no server per frame. The interface exposes Det, Seg, and Pose modes for detection,
+segmentation, and pose output. The model export format, class configuration, and execution delegate
+are taken from the application configuration when a reproducible deployment is documented.
 
 \subsection{Task Selection and Threshold Handling}
-The task selector changes the type of output produced by the same camera-to-display workflow.
-Detection emphasizes rectangular object localization and class labels, segmentation adds pixel-region
-information, and pose adds keypoints and skeletal connections for visible people. Keeping these modes
-inside one interface makes the prototype suitable for comparing the presentation cost and visual
-interpretation of different outputs without changing the surrounding camera workflow.
+The task selector changes the output produced by the same camera-to-display workflow. Detection
+emphasises rectangular localization and class labels, segmentation adds pixel regions, and pose adds
+keypoints and skeletal connections. Keeping the modes in one interface allows their presentation cost
+and visual interpretation to be compared without changing the surrounding workflow.
 
-The confidence threshold provides a first filtering boundary for predictions shown to the user, while
-the IoU threshold affects overlap handling where the selected pipeline applies suppression. A lower
-confidence threshold can expose more candidate objects but may also increase clutter. A stricter
-threshold can make the view easier to interpret while hiding weak or partially occluded predictions.
-For this reason, a threshold value should be treated as part of the experiment configuration, not as
-a hidden interface preference.
-
-The demonstrated configuration uses a confidence threshold of 0.25 and an IoU threshold of 0.70.
-Those values explain the visible output in the supplied exhibits, but they do not define an optimal
-configuration for combat scenes. Future tests should vary one setting at a time, preserve the same
-scene and model, and record the resulting changes in visible detections, masks, or keypoints.
+The confidence threshold sets the first filtering boundary for displayed predictions, while the IoU
+threshold governs overlap handling where the pipeline applies suppression. A lower confidence
+threshold exposes more candidates but adds clutter; a stricter one eases interpretation but hides
+weak or partially occluded predictions. Thresholds are therefore experiment configuration, not hidden
+interface preferences. The demonstrated configuration uses a confidence threshold of 0.25 and an IoU
+threshold of 0.70; these explain the visible output but do not define an optimal combat setting.
+Future tests should vary one setting at a time on the same scene and model and record the change.
 
 \subsection{Post-Processing Module}
-The native inference output is passed to the Flutter YOLOView integration for display. The
-application renders bounding boxes, class labels, and confidence information on the live camera
-feed. Segmentation mode adds colored object-region overlays, while pose mode displays body
-keypoints and their connecting lines. Detection coordinates must be mapped to the displayed
-preview after rotation, letterboxing, scaling, or zoom so that the overlays remain aligned with
-the visible objects.
+The native inference output passes to the Flutter YOLOView integration, which renders bounding boxes,
+class labels, and confidence values on the live feed. Segmentation mode adds coloured region
+overlays, and pose mode displays keypoints with connecting lines. Detection coordinates are mapped to
+the displayed preview after rotation, letterboxing, scaling, or zoom so that overlays stay aligned.
 
 \subsection{User Interface Module}
-Flutter supplies the application interface, camera display, mode controls, and visual output.
-The demonstration screenshots show confidence and intersection-over-union (IoU) threshold controls,
-zoom information, and runtime indicators. Keeping these controls in the camera view allows users
-to inspect the effect of a configuration change without switching to a separate results screen.
-Object labels describe model predictions; an object or person label alone does not establish
-hostile intent or distinguish a combatant from a civilian.
+Flutter supplies the interface, camera display, mode controls, and visual output. The screenshots show
+confidence and intersection-over-union (IoU) threshold controls, zoom information, and runtime
+indicators, which let a user inspect a configuration change without leaving the camera view. Object
+labels describe model predictions only; a label alone does not establish hostile intent.
 
 \subsection{Development Logging Module}
-Android Logcat records runtime logs and debugging information during development and testing.
-These logs support diagnosis of camera initialization, inference integration, and application
-behavior. This development logging mechanism is distinct from a persistent detection-event or
-mission-video archive. The current implementation does not include a demonstrated database,
-encrypted recording service, or post-mission retrieval interface.
+Android Logcat records runtime and debugging information during development and testing, supporting
+diagnosis of camera initialization, inference integration, and application behaviour. This is
+development logging, not a persistent detection-event or mission-video archive; the implementation
+contains no demonstrated database, encrypted recording service, or post-mission retrieval interface.
 
 \label{end:modules}
 \section{Frame Processing Pipeline}\label{sec:pipeline}
 The module descriptions define the following processing sequence for the prototype:
 \begin{enumerate}
-  \item Initialize the selected camera and model task, then present the live preview after camera
+  \item Initialize the selected camera and model task, then present the live preview once camera
     permission is available.
   \item Obtain an analyzable frame from CameraX and account for its orientation.
   \item Resize or letterbox the frame, convert it to RGB, and prepare the input tensor in the
@@ -118,184 +96,136 @@ The module descriptions define the following processing sequence for the prototy
 \end{enumerate}
 
 \section{Interface and Detection Controls}\label{sec:controls}
-The demonstration screenshots show a confidence threshold of 0.25 and an IoU threshold of 0.70.
-The confidence setting controls the minimum score accepted for display. The IoU setting controls
-overlap filtering where the selected model pipeline uses it. Changing either threshold can alter
-the visible output, so evaluation runs should record both values along with the selected task and
-model. The implementation record should state whether all task variants use the same suppression mechanism.
+The demonstration screenshots show a confidence threshold of 0.25 and an IoU threshold of 0.70. The
+confidence setting fixes the minimum score accepted for display, and the IoU setting controls overlap
+filtering where the pipeline uses it. Because either value changes the visible output, evaluation runs
+should record both along with the selected task and model, and should state whether all task variants
+share one suppression mechanism.
 
 The interface also displays frames per second and processing times, including preprocessing,
-inference, and post-processing components. These values help inspect responsiveness during a
-demonstration. They are displayed runtime observations, not a substitute for repeated timing
-measurements on a documented device. Chapter~\ref{ch:result} records the displayed values and
-distinguishes them from a sustained-performance benchmark.
+inference, and post-processing components. These help inspect responsiveness during a demonstration,
+but they are displayed runtime observations rather than repeated timing measurements on a documented
+device. Chapter~\ref{ch:result} records the displayed values and separates them from a sustained
+performance benchmark.
 
 \label{end:controls}
 \section{Integration and Testing}\label{sec:integration}
-Integration testing connects camera capture, model execution, and overlay rendering as one
-application workflow. The demonstrated exhibits involve scissors, a mouse, furniture, laptops,
-bottles, and groups of people. These scenes exercise multiple visible objects and the three task
-modes. Portrait and landscape exhibits also provide evidence for checking preview
-orientation and output alignment.
+Integration testing connects camera capture, model execution, and overlay rendering into one
+workflow. The exhibits involve scissors, a mouse, furniture, laptops, bottles, and groups of people,
+exercising multiple visible objects and all three task modes; the portrait and landscape exhibits
+additionally check preview orientation and output alignment.
 
-The integration boundary can be understood as five connected checkpoints. First, the camera must
-initialize and deliver a frame after permission is granted. Second, the frame must reach the selected
-model task with the expected orientation. Third, the inference result must return without blocking the
-interface. Fourth, the result must be mapped into the preview without visible displacement. Finally,
-the interface must expose the selected mode, threshold state, and runtime fields clearly enough for a
-user to interpret the output. A failure at any checkpoint can make the final screenshot appear wrong
-even when the other modules are functioning correctly.
+The integration boundary has five connected checkpoints: the camera initializes and delivers a frame
+after permission is granted; the frame reaches the selected task with the expected orientation; the
+inference result returns without blocking the interface; the result is mapped into the preview
+without visible displacement; and the interface exposes mode, threshold state, and runtime fields
+clearly enough to interpret the output. A failure at any checkpoint can make the final screenshot
+appear wrong even when other modules work correctly.
 
-The visible prototype supports functional checks at this boundary. It demonstrates live preview
-operation, task switching, overlays, portrait and landscape presentation, and displayed timing
-values. It does not by itself establish permission recovery after interruption, long-duration thermal
-stability, memory behavior, or reliable operation across different camera sensors. Those cases belong
-to a later validation plan and should be tested on documented hardware rather than inferred from one
-successful demonstration.
+The visible prototype supports functional checks at this boundary: live preview, task switching,
+overlays, both orientations, and displayed timing. It does not establish permission recovery after
+interruption, long-duration thermal stability, memory behaviour, or reliable operation across
+different camera sensors; those belong to a later validation plan on documented hardware.
 
-For reproducible testing, record the Android device and version, application build, model file,
-task mode, input resolution, thresholds, and execution backend. Separate functional checks from
-accuracy and performance evaluation: a correctly rendered box verifies an interface path, while
-precision, recall, mAP, and sustained frame rate require defined data and measurement procedures.
-The available prototype material supports an initial functional demonstration; the Result chapter describes
-the available observations and the evaluation details still needed.
-
-The recommended implementation checklist is therefore: verify camera permission and initialization;
-verify rotation handling in both orientations; verify the selected task and threshold values; verify
-that boxes, masks, and keypoints remain aligned after resizing; verify that runtime readings are
-visible without covering the scene; and record the device, build, model, and execution backend.
-Completing this checklist would make a later accuracy or performance study easier to reproduce without
-changing the application architecture described in this chapter.
+For reproducible testing, record the Android device and version, application build, model file, task
+mode, input resolution, thresholds, and execution backend, and separate functional checks from
+accuracy and performance evaluation. A correctly rendered box verifies an interface path, whereas
+precision, recall, mAP, and sustained frame rate require defined data and measurement procedures. The
+resulting checklist is to verify camera permission and initialization, rotation handling in both
+orientations, the selected task and thresholds, overlay alignment after resizing, and visibility of
+the runtime readings, and to record the device, build, model, and backend.
 
 \subsection{Implementation Risks and Mitigations}
-Several practical risks are relevant to an on-device vision application. Camera permission can be
-denied, revoked, or interrupted when the activity changes state. The application should respond by
-showing a clear recovery path rather than attempting inference on an unavailable frame. Similarly,
-model initialization can fail because of a missing file, an incompatible export, or an unavailable
-execution delegate. Logging the initialization stage and the selected task makes these failures easier
-to separate from ordinary frame-processing errors.
+Camera permission can be denied, revoked, or interrupted when the activity changes state; the
+application should offer a clear recovery path instead of running inference on an unavailable frame.
+Model initialization can likewise fail through a missing file, an incompatible export, or an
+unavailable execution delegate, and logging the stage and selected task separates these failures from
+ordinary frame-processing errors.
 
-Orientation and preview scaling create a second class of risk. A camera frame can be valid while its
-overlay is visually incorrect if the rotation metadata, crop, zoom, or letterbox dimensions are not
-propagated consistently. The demonstrated portrait and landscape views provide a practical regression
-pair: the same visible object can be checked after the device orientation changes, and any systematic
-displacement can be investigated in the coordinate transformation rather than in the model itself.
+Orientation and preview scaling form a second class of risk. A frame can be valid while its overlay is
+visually wrong if rotation metadata, crop, zoom, or letterbox dimensions are not propagated
+consistently; the portrait and landscape views provide a regression pair for checking the same object
+after an orientation change.
 
-Runtime stability is another boundary. A single successful frame does not establish that the preview
-will remain responsive during a long session. Repeated runs should therefore record frame processing
-behavior, memory pressure, device temperature, and the selected acceleration path. If performance
-degrades over time, the investigation should distinguish model execution, image conversion, overlay
-rendering, and logging overhead. This decomposition follows the modular structure already used by the
-prototype and avoids attributing every delay to the detector.
-
-Finally, the interface must remain understandable when several objects, masks, or keypoints are
-visible at once. Labels should not obscure the most important part of the scene, controls should be
-readable in both orientations, and confidence values should be interpreted as model outputs rather
-than as verified accuracy. These considerations do not change the current prototype result, but they
-define the engineering checks needed before the same pipeline could be evaluated in more demanding
-indoor, outdoor, or tactical conditions.
+Runtime stability is a third boundary, since one successful frame does not show that the preview stays
+responsive over a session. Repeated runs should record frame-processing behaviour, memory pressure,
+device temperature, and the acceleration path, and should distinguish model execution, image
+conversion, overlay rendering, and logging overhead when performance degrades. Finally, the interface
+must stay legible when many objects, masks, or keypoints are visible: labels should not obscure the
+scene, controls should be readable in both orientations, and confidence values are model outputs, not
+verified accuracy.
 
 \subsection{Runtime State and Error Handling}
-The capture-to-display path is easier to maintain when its runtime states are explicit. A practical
-sequence is to begin in an uninitialized state, request or confirm camera permission, initialize the
-preview, load the selected model, and only then accept frames for inference. During a task change, the
-interface should retain the last valid preview while the new task is prepared, or show a clear loading
-state if the pipeline must be recreated. Treating these transitions as states prevents a temporary
-camera or model condition from being mistaken for a detection failure.
+An explicit runtime state sequence simplifies maintenance: start uninitialized, confirm camera
+permission, initialize the preview, load the selected model, and only then accept frames for
+inference. During a task change the interface should retain the last valid preview or show a loading
+state. Treating these transitions as states prevents a temporary camera or model condition from being
+mistaken for a detection failure.
 
-Camera permission is the first recoverable boundary. If permission is denied, the application should
-explain why the camera is unavailable and provide a route for the user to grant access rather than
-continuing with a null or stale frame. If the activity is paused or the camera is interrupted, the
-preview should be released or reattached according to the CameraX lifecycle. The next accepted frame
-should be checked for valid dimensions, rotation metadata, and an available image buffer before it is
-passed to preprocessing. These checks are ordinary application safeguards, but they are important for
-an inference application because a malformed frame can create misleading downstream symptoms.
+Permission is the first recoverable boundary: if it is denied the application should explain why the
+camera is unavailable and offer a route to grant access, and if the activity pauses or the camera is
+interrupted the preview should follow the CameraX lifecycle. Each accepted frame should be checked for
+valid dimensions, rotation metadata, and an available image buffer before preprocessing, because a
+malformed frame produces misleading downstream symptoms.
 
-Model initialization is a separate state from camera initialization. A model file can be absent,
-incompatible with the selected task, or unable to use the requested execution delegate. The interface
-should report that condition as an initialization error and retain enough diagnostic information to
-identify the model path, task, and delegate. A fallback execution path may be considered during later
-development, but it should be recorded because a change from accelerated to non-accelerated execution
-would affect runtime readings. The current report therefore treats the execution backend as a required
-configuration field rather than assuming that all devices use the same path.
+Model initialization is a separate state: a model file can be absent, incompatible with the selected
+task, or unable to use the requested execution delegate. The interface should report an
+initialization error with the model path, task, and delegate, and any fallback to non-accelerated
+execution should be recorded because it changes runtime readings. Intermittent frame failures should
+be logged and skipped rather than ending the preview, repeated failures should surface as a warning,
+and inference exceptions should not leave a stale overlay on a new frame without indication.
 
-Frame processing also needs a controlled response to intermittent failures. A single frame that cannot
-be decoded should be logged and skipped without terminating the whole preview, while repeated failures
-should be surfaced as a camera or pipeline warning. Inference exceptions should not leave an old overlay
-on a new frame without an indication that the result is stale. Clearing or timestamping the overlay is
-preferable to presenting an earlier prediction as if it belonged to the current image. These behaviours
-are proposed engineering checks for the next validation pass; the supplied screenshots establish the
-successful path but do not document every recovery state.
-
-The same principle applies to user-controlled settings. A threshold change should be applied at a
-defined point in the pipeline and reflected in the visible control. If the selected task does not use a
-particular setting in the same way as another task, the interface or documentation should make that
-scope clear. The configuration used for a screenshot should be captured with the output so that a later
-review can distinguish a changed threshold from a changed model or scene. This small amount of state
-traceability reduces ambiguity without requiring persistent mission recording.
+User-controlled settings obey the same rule. A threshold change should apply at a defined pipeline
+point and be reflected in the visible control, and the scope of a setting should be clear where task
+variants use it differently. Capturing the configuration with each output lets a later review
+distinguish a changed threshold from a changed model or scene.
 
 \subsection{Configuration Traceability}
-Reproducibility depends on recording the conditions under which an output was produced. For each
-demonstration, the minimum record should include the application build, Android version, device model,
-camera orientation, preview dimensions, selected task, model file or model version, confidence
-threshold, IoU threshold, maximum item setting if applicable, and execution backend. The record should
-also identify whether the frame came from a live camera or a static test image. Without these fields,
-two screenshots with different labels or timings cannot be compared reliably.
+Each demonstration should record the application build, Android version, device model, camera
+orientation, preview dimensions, selected task, model file or version, confidence and IoU thresholds,
+maximum item setting where applicable, and execution backend, together with whether the frame came
+from a live camera or a static test image. Without these fields, two screenshots with different labels
+or timings cannot be compared.
 
-The orientation record should contain both the source rotation and the display orientation. A label such
-as ``portrait'' alone is insufficient because a camera sensor can deliver a rotated buffer while the
-preview uses a different coordinate convention. The crop or letterbox policy should be recorded as
-well, since the same source frame can produce different overlay geometry when the model input aspect
-ratio changes. Zoom and digital crop settings are also relevant when small objects are being inspected.
+The orientation record should contain both source rotation and display orientation, since a ``portrait''
+label alone cannot express a rotated buffer shown under a different coordinate convention, and the crop
+or letterbox policy and any zoom or digital crop should be recorded because they change overlay
+geometry. Runtime fields should be copied exactly as displayed, with label and unit retained, and the
+time window, averaging rule, and whether capture is excluded should be documented before any formal
+performance claim.
 
-Runtime fields should be copied exactly as displayed and should not be silently converted into a new
-metric. If the interface reports FPS, processing time, preprocessing time, inference time, and
-post-processing time, each value should retain its label and unit. The time window, averaging rule, and
-whether the value excludes camera capture should be documented before a formal performance claim is
-made. The present report follows this rule by transcribing the displayed values and keeping the
-interpretation configuration-specific.
-
-This traceability approach also supports debugging. If an overlay is displaced only in landscape
-orientation, the investigation can compare rotation metadata and preview dimensions while holding the
-model and thresholds constant. If inference time increases after a task change, the task and model can
-be compared without confusing the result with a different camera scene. If a frame-rate value changes
-after a build change, the application build and delegate record provide a starting point for examining
-the cause. The record therefore serves both future evaluation and ordinary implementation maintenance.
+The same record supports debugging: an overlay displaced only in landscape can be investigated by
+comparing rotation metadata and preview dimensions while the model and thresholds are held constant,
+an inference-time increase after a task change can be compared without a different scene, and a
+frame-rate change after a build change has a starting point in the build and delegate record.
 
 \subsection{Validation Matrix and Reproducible Procedure}
-A later validation pass can be organized as a matrix rather than as a collection of unrelated
-screenshots. The first dimension is task mode: detection, segmentation, and pose. The second is device
-orientation: portrait and landscape. The third is scene condition: clear objects, multiple objects,
-partial occlusion, small or distant objects, camera motion, and illumination variation. For every cell,
-the same model and documented device should be used, with repeated samples collected under the same
-threshold configuration. Empty cells should be reported as untested rather than inferred from a nearby
-condition.
+A later validation pass is best organised as a matrix. The first dimension is task mode (detection,
+segmentation, pose), the second is orientation (portrait, landscape), and the third is scene condition
+(clear objects, multiple objects, partial occlusion, small or distant objects, camera motion,
+illumination variation). Every cell should use the same model and documented device with repeated
+samples under one threshold configuration, and empty cells should be reported as untested rather than
+inferred from a nearby condition.
 
-The functional part of the matrix asks whether the camera preview initializes, the selected task loads,
-the output type is rendered, and the overlay remains aligned after orientation and preview-size changes.
-The measurement part asks for repeated frame-rate and processing-time samples, together with the exact
-time window and device state. The accuracy part requires labelled reference data and a defined matching
-rule before precision, recall, or mAP can be computed. Keeping these three parts separate prevents a
-successful visual overlay from being treated as evidence for all three.
+The functional part asks whether the preview initializes, the task loads, the output type renders, and
+the overlay stays aligned after orientation and preview-size changes. The measurement part asks for
+repeated frame-rate and processing-time samples with the time window and device state. The accuracy
+part requires labelled reference data and a matching rule before precision, recall, or mAP can be
+computed. Keeping the three parts separate prevents a successful overlay from being treated as
+evidence for all three.
 
-A reproducible run can follow the sequence below. First, record the device, build, model, task, and
-threshold configuration. Second, start the application from a known lifecycle state and confirm camera
-permission. Third, allow the preview to stabilize before collecting observations. Fourth, capture a
-fixed number of samples for the selected scene and preserve the displayed runtime fields. Fifth, repeat
-the run after changing only one controlled variable, such as orientation or task mode. Finally, store
-the observations with enough context to identify the image, configuration, and any failure or dropped
-frame. This procedure does not create a benchmark by itself; it defines the evidence needed for one.
+A reproducible run records the device, build, model, task, and threshold configuration; starts from a
+known lifecycle state and confirms camera permission; lets the preview stabilize; captures a fixed
+number of samples with the displayed runtime fields preserved; repeats after changing one controlled
+variable such as orientation or task mode; and stores the observations with enough context to identify
+the image, configuration, and any failure or dropped frame. Negative and recovery cases belong in the
+same matrix: denied permission, an unavailable model, an unsupported task, an invalid frame, an
+interrupted session, and an overlay mismatch all mark the boundary of reliable operation and should be
+recorded rather than omitted.
 
-The matrix should also include negative and recovery cases. A denied permission, unavailable model,
-unsupported task, invalid frame, interrupted camera session, and overlay mismatch are all meaningful
-results because they identify the boundary of reliable operation. The correct response is to record the
-failure and its recovery behaviour, not to omit it from the report. For a safety-sensitive concept,
-clear failure indication is part of system quality even when no detection metric is involved.
-
-The current prototype material supports the successful functional path and supplies useful examples for
-the first matrix cells. It does not provide the device configuration, repeated sample count, annotated
-ground truth, or recovery logs required to complete the full matrix. Stating that boundary keeps the
-implementation chapter reproducible and allows future measured results to be added without rewriting
-the existing evidence.
+The current material supports the successful functional path and the first matrix cells, but it does
+not provide the device configuration, repeated sample count, annotated ground truth, or recovery logs
+needed for the full matrix. Stating that boundary keeps the chapter reproducible and allows measured
+results to be added later without rewriting the existing evidence.
 \label{end:integration}\label{end:implementation}
 \par\endgroup
