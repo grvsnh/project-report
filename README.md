@@ -253,8 +253,9 @@ limitations, and scope for further work expected by the guideline.
 
 ### Figures, tables, snaps and equations
 
-- Figures and tables are numbered chapter-wise, for example `Figure 4.1` and
-  `Table 7.1`.
+- Figures and tables are numbered chapter-wise, for example `Fig 4.1` and
+  `Table 7.1`. Captions and in-text references both use the abbreviated name
+  without a colon, matching the department's reference report.
 - Figure and table entries are maintained in the corresponding generated lists.
 - Prototype screenshots are labelled as `Snap 7.1`–`Snap 7.4` and are also
   listed in the separate List of Snaps. The caption text on the page is the same
