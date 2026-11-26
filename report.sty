@@ -153,10 +153,10 @@
 \newenvironment{missionpage}[1][\MissionArtwork]{%
   \null\phantomsection\thispagestyle{empty}%
   \begin{tikzpicture}[remember picture,overlay]
-    \draw[line width=3bp] ($(current page.north west)+(80.5bp,-49.5bp)$)
-      rectangle ($(current page.north west)+(531.5bp,-793bp)$);
-    \draw[line width=.72bp] ($(current page.north west)+(83.1bp,-52.1bp)$)
-      rectangle ($(current page.north west)+(528.9bp,-790.4bp)$);
+    \draw[line width=3bp] ($(current page.north west)+(67bp,-41.05bp)$)
+      rectangle ($(current page.north west)+(546.5bp,-819.01bp)$);
+    \draw[line width=.72bp] ($(current page.north west)+(69.58bp,-43.63bp)$)
+      rectangle ($(current page.north west)+(543.92bp,-816.43bp)$);
     #1
     \FrontLineRaw{303.07}{771.54}{0}{12}{\thepage}%
 }{%
@@ -273,13 +273,16 @@
   \rlap{\hspace*{300.20bp}\makebox[30bp][c]{\textbf{\PageRange{#1}{#2}}}}%
   \hspace*{-38.28bp}\makebox[38.28bp][l]{\textbf{\ref{#1}}}%
   \textbf{\nameref{#1}}\par}
+% Entries are set with the paragraph gap \contentsentrygap, so a block that has
+% to reach the foot of its page can be opened up without moving the block above it.
+\newcommand{\contentsentrygap}{8.85bp}
 \newcommand{\ContentsFlowBlock}[2]{%
   \node[anchor=base west,inner sep=0pt,outer sep=0pt]
     at ($(current page.north west)+(\ContentsTitleX bp,-\ContentsY{#1}bp)$)
     {\begin{minipage}[t]{286bp}%
-      \setstretch{1}\fontsize{12bp}{15bp}\selectfont\raggedright
-      \setlength{\parindent}{0pt}\setlength{\parskip}{8.85bp}%
-      \setlength{\parfillskip}{0pt plus 1fil}%
+      \setstretch{1}\fontsize{12bp}{15bp}\selectfont
+      \setlength{\parindent}{0pt}\setlength{\parskip}{\contentsentrygap}%
+      \setlength{\parfillskip}{0pt plus 1fil}%\emergencystretch=1em
       #2%
     \end{minipage}};%
 }

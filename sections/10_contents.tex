@@ -51,7 +51,10 @@
 
 \begin{frontpage}
   \label{front:contents-2}
-  % One contents entry per surveyed paper, in the order used by the chapter.
+  % One contents entry per surveyed paper, in the order used by the chapter.  The
+  % entries are opened up slightly so the block reaches the foot of the page in
+  % the same way as the block above it, instead of stopping short.
+  \renewcommand{\contentsentrygap}{14.3bp}
   \ContentsFlowBlock{literature-cont}{%
     \ContentsFlowRow{sec:supplementary_paper_2}{end:supplementary_paper_2}%
     \ContentsFlowRow{sec:supplementary_paper_3}{end:supplementary_paper_3}%

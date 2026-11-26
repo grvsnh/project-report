@@ -144,12 +144,42 @@ compared to specialized military hardware. Open-source AI frameworks further red
 expenses. The prototype approach minimizes initial investment, making the system cost-effective for
 research, testing, and potential scalable improvements in future versions.
 
+% The chapter sets \parskip to 0pt, so the added paragraphs carry their own gap
+% inside a group and leave the following chapters' spacing untouched.
+\begingroup\setlength{\parskip}{6pt}
+Beyond cost, the approach fits the project schedule and the facilities already available, because the
+prototype reuses the existing Android toolchain and pretrained detection models instead of requiring a
+new data-collection campaign. The same reasoning applies to maintenance: an application built on
+open-source libraries can be revised without vendor dependence, and recording the model, build, and
+threshold settings keeps later versions repeatable and comparable with the results reported here.
+
+The technical side is supported by the maturity of the tooling, since a phone camera, an exported YOLO
+model, and an on-device inference library are production-ready components rather than research
+prototypes. The capture, rotation, inference, and overlay path already runs, so no new hardware,
+licensed software, or laboratory is needed beyond a mid-range phone and a development machine.
+
+The study also weighed the constraints that the current prototype leaves open. Field deployment would
+need rugged mounting, managed power, and safeguards for the imagery it captures, while combat-specific
+accuracy would need annotated data and a documented evaluation protocol. None of these blocks the
+present demonstration; they mark out the next stage of validation before operational use.
+
+Taken together, the three dimensions show that the project can be built and deployed within the
+resources a final-year team commands. The remaining risk is evidence rather than feasibility:
+accuracy, latency, and field behaviour must still be measured before the system is ready for service
+use.
+\endgroup
+
 \label{end:feasibility}
 \clearpage
 \section{Work Distribution}\label{sec:work}
 The project tasks were distributed between the team members according to their
 responsibilities in model development, interface implementation, testing, presentation,
 and documentation.
+
+\vspace{6pt}
+In the table 1.1, the responsibilities taken up by each member are set against the main activities
+of the project, so that the division between model development and application implementation, and
+the shared work of review, documentation, and demonstration, can be seen at a glance.
 \begin{table}[htbp]
   \centering
   \caption{Work Distribution Among Team Members}\label{tab:work}
